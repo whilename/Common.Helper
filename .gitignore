@@ -1,0 +1,17 @@
+*.cache
+*.exe
+*.pdb
+*.manifest
+ConsoleApp/obj/Release/ConsoleApp.csproj.FileListAbsolute.txt
+*.dll
+*.xml
+packages/Microsoft.AspNet.Mvc.4.0.20710.0/Microsoft.AspNet.Mvc.4.0.20710.0.nupkg
+*.nupkg
+*.transform
+*.config
+packages/Newtonsoft.Json.9.0.1/tools/install.ps1
+*._
+*.force
+*.txt
+*.resources
+*.log
