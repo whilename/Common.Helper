@@ -43,6 +43,11 @@ namespace Common.Utility
             return string.Empty;
         }
 
+        /// <summary>匹配是否是十进制整数值或小数值，^[0-9]+([.]{1}[0-9]+){0,1}$</summary>
+        /// <param name="dm">匹配字符数值</param>
+        /// <returns>如果正则表达式找到匹配项，则为 true；否则，为 false。</returns>
+        public static bool RegexDecimal(string dm) { return new Regex("^[0-9]+([.]{1}[0-9]+){0,1}$").IsMatch(dm); }
+
         /*
         /// <summary>图文识别</summary>
         /// <param name="imgpath"></param>
