@@ -173,7 +173,7 @@ namespace Common.Utility
         /// <param name="context"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static Dictionary<string, object> GetFromBody(HttpActionContext context, string key = "dto")
+        public static Dictionary<string, object> GetFromBody(HttpActionContext context, string key)
         {
             // 表单信息字典
             Dictionary<string, object> frombody = new Dictionary<string, object>();
