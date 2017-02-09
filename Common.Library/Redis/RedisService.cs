@@ -6,7 +6,7 @@ using System.Configuration;
 
 namespace Common.Utility.Redis
 {
-    /// <summary></summary>
+    /// <summary>RedisService</summary>
     public class RedisService : ICacheService, IDisposable
     {
         // 当前对象实例 
@@ -26,9 +26,7 @@ namespace Common.Utility.Redis
             prcm = new PooledRedisClientManager(param, param, new RedisClientManagerConfig { MaxWritePoolSize = 5, MaxReadPoolSize = 5, AutoStart = true, });
         }
 
-        /// <summary>
-        /// 获取缓存对象实例
-        /// </summary>
+        /// <summary>获取缓存对象实例</summary>
         public static ICacheService Instance
         {
             get
@@ -42,34 +40,35 @@ namespace Common.Utility.Redis
             }
         }
 
-        /// <summary>
-        /// 执行与释放或重置非托管资源相关的应用程序定义的任务
-        /// </summary>
+        /// <summary>执行与释放或重置非托管资源相关的应用程序定义的任务</summary>
         public void Dispose()
         {
             prcm.Dispose();
         }
 
-        /// <summary>
-        /// 删除指定键值
-        /// </summary>
+        /// <summary>删除指定键值</summary>
         /// <param name="key">键</param>
         /// <returns></returns>
         public long Del(params string[] key)
         {
             using (RedisClient redis = prcm.GetClient() as RedisClient)
             {
-                if (key != null && key.Length > 0)
-                    return redis.Del(key);
-                return 0;
+                return (key != null && key.Length > 0) ? redis.Del(key) : 0;
             }
+        }
+
+        /// <summary>获取或设置指定键缓存值</summary>
+        /// <param name="key">键</param>
+        /// <returns></returns>
+        public object this[string key]
+        {
+            get { return Get(key); }
+            set { Set(key, value); }
         }
 
         #region Get
 
-        /// <summary>
-        /// 获取指定条件内的键
-        /// </summary>
+        /// <summary>获取指定条件内的键</summary>
         /// <param name="where">条件</param>
         /// <returns></returns>
         public List<string> getKeys(string where)
@@ -81,9 +80,7 @@ namespace Common.Utility.Redis
             }
         }
 
-        /// <summary>
-        /// 获取缓存值
-        /// </summary>
+        /// <summary>获取缓存值</summary>
         /// <param name="key">键</param>
         /// <returns></returns>
         public string Get(string key)
@@ -94,9 +91,7 @@ namespace Common.Utility.Redis
             }
         }
 
-        /// <summary>
-        /// 获取缓存对象
-        /// </summary>
+        /// <summary>获取缓存对象</summary>
         /// <typeparam name="T">指定对象类型</typeparam>
         /// <param name="key">键</param>
         /// <returns></returns>
@@ -108,9 +103,7 @@ namespace Common.Utility.Redis
             }
         }
 
-        /// <summary>
-        /// 获取指定键下的缓存值集合
-        /// </summary>
+        /// <summary>获取指定键下的缓存值集合</summary>
         /// <typeparam name="T">指定对象类型</typeparam>
         /// <param name="keys">键集合</param>
         /// <returns></returns>
@@ -126,9 +119,7 @@ namespace Common.Utility.Redis
 
         #region Set
 
-        /// <summary>
-        /// 设置缓存值
-        /// </summary>
+        /// <summary>设置缓存值</summary>
         /// <param name="key">键</param>
         /// <param name="value">值</param>
         public void Set(string key, string value)
@@ -139,9 +130,7 @@ namespace Common.Utility.Redis
             }
         }
 
-        /// <summary>
-        /// 设置缓存值
-        /// </summary>
+        /// <summary>设置缓存值</summary>
         /// <param name="key">键</param>
         /// <param name="value">值</param>
         /// <param name="expire">过期时间</param>
@@ -153,9 +142,7 @@ namespace Common.Utility.Redis
             }
         }
 
-        /// <summary>
-        /// 设置缓存对象
-        /// </summary>
+        /// <summary>设置缓存对象</summary>
         /// <typeparam name="T">指定对象类型</typeparam>
         /// <param name="key">键</param>
         /// <param name="entity">对象值</param>
@@ -167,9 +154,7 @@ namespace Common.Utility.Redis
             }
         }
 
-        /// <summary>
-        /// 设置缓存对象
-        /// </summary>
+        /// <summary>设置缓存对象</summary>
         /// <typeparam name="T">指定对象类型</typeparam>
         /// <param name="key">键</param>
         /// <param name="entity">对象值</param>
@@ -186,9 +171,7 @@ namespace Common.Utility.Redis
 
         #region Queue Item List
 
-        /// <summary>
-        /// 将对象值加入指定的消息队列中
-        /// </summary>
+        /// <summary>将对象值加入指定的消息队列中</summary>
         /// <param name="listId">列表Id</param>
         /// <param name="value">值</param>
         public void EnqueueItemOnList(string listId, string value)
@@ -199,9 +182,7 @@ namespace Common.Utility.Redis
             }
         }
 
-        /// <summary>
-        /// 将对象值加入指定的消息队列中
-        /// </summary>
+        /// <summary>将对象值加入指定的消息队列中</summary>
         /// <param name="listId">列表Id</param>
         /// <param name="entity">对象值</param>
         public void EnqueueItemOnList(string listId, object entity)
@@ -212,9 +193,7 @@ namespace Common.Utility.Redis
             }
         }
 
-        /// <summary>
-        /// 获取指定队列中的对象值
-        /// </summary>
+        /// <summary>获取指定队列中的对象值</summary>
         /// <param name="listId">列表Id</param>
         /// <returns></returns>
         public string DequeueItemFromList(string listId)
@@ -225,9 +204,7 @@ namespace Common.Utility.Redis
             }
         }
 
-        /// <summary>
-        /// 获取指定队列中的对象值
-        /// </summary>
+        /// <summary>获取指定队列中的对象值</summary>
         /// <typeparam name="T">指定对象类型</typeparam>
         /// <param name="listId">列表Id</param>
         /// <returns></returns>
@@ -236,15 +213,12 @@ namespace Common.Utility.Redis
             using (RedisClient redis = prcm.GetClient() as RedisClient)
             {
                 string value = redis.DequeueItemFromList(listId);
-                if (string.IsNullOrEmpty(value))
-                    return default(T);
+                if (string.IsNullOrEmpty(value)) { return default(T); }
                 return JsonConvert.DeserializeObject<T>(value);
             }
         }
 
-        /// <summary>
-        /// 获取指定队列中的对象值总数
-        /// </summary>
+        /// <summary>获取指定队列中的对象值总数</summary>
         /// <param name="listId">列表Id</param>
         /// <returns></returns>
         public int GetListCount(string listId)

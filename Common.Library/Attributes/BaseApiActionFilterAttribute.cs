@@ -17,7 +17,8 @@ namespace Common.Library.Attributes
         public string[] AllowSites { get; set; }
         
         /// <summary>获取请求提交的JSON表单或数据字典列表</summary>
-        /// <param name="context"></param>
+        /// <param name="context">操作上下文</param>
+        /// <param name="key">POST请求操作参数的列表键值，用于获取提交的表单数据</param>
         /// <returns></returns>
         public virtual IDictionary<string, object> FromBody(HttpActionContext context, string key = "dto")
         {
@@ -25,7 +26,7 @@ namespace Common.Library.Attributes
         }
 
         /// <summary>检查允许跨域请求站点</summary>
-        /// <param name="context"></param>
+        /// <param name="context">操作上下文</param>
         public virtual void OnAllowOriginExcute(HttpActionExecutedContext context)
         {
             Dictionary<string, string> headers = context.Request.Headers.ToDictionary(x => x.Key, x => string.Join(" ", x.Value));
