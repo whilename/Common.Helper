@@ -201,6 +201,28 @@ namespace Common.Utility
             catch (Exception ex) { Log.Error(ex); return frombody; }
         }
 
+        /// <summary>获取请求提交的表单数据流字符串</summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public static string GetFromBodyStream(HttpActionContext context)
+        {
+            var task = context.Request.Content.ReadAsStreamAsync();
+            var content = string.Empty;
+            using (System.IO.Stream sm = task.Result)
+            {
+                if (sm != null)
+                {
+                    sm.Seek(0, System.IO.SeekOrigin.Begin);
+                    int len = (int)sm.Length;
+                    byte[] inputByts = new byte[len];
+                    sm.Read(inputByts, 0, len);
+                    sm.Close();
+                    content = Encoding.UTF8.GetString(inputByts);
+                }
+            }
+            return content;
+        }
+
         /// <summary>解析Cookie</summary>
         public static Dictionary<string, object> GetRequestCookie()
         {
