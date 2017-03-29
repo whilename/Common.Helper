@@ -131,7 +131,7 @@ namespace WeChat
             config.appid = WXConfig.APPID;// 微信Id
             config.noncestr = signture.noncestr;// 随机码
             config.timestamp = signture.timestamp; // 时间戳
-            config.signature = Utils.SHA1Hash(Utils.ObjJoinStr(signture, true, true, "{0}={1}&").Trim('&'));
+            config.signature = Utils.SHA1Hash(Utils.ObjectJoinString(signture, true, true, "{0}={1}&").Trim('&'));
             return config;
         }
 

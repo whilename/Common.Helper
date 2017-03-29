@@ -171,7 +171,6 @@ namespace Common.Utility
         /// <typeparam name="T">返回的数据对象</typeparam>
         /// <param name="url">请求地址</param>
         /// <param name="param">请求提交参数对象</param>
-        /// <param name="setCode">设置所发送的请求提交参数编码格式</param>
         /// <returns>返回 T 数据对象</returns>
         public static T HttpWebRequestPost<T>(string url, string param)
         {
@@ -180,7 +179,6 @@ namespace Common.Utility
         }
 
         /// <summary>发送POST请求，接受返回数据</summary>
-        /// <typeparam name="T">返回的数据对象</typeparam>
         /// <param name="url">请求地址</param>
         /// <param name="param">请求提交参数对象</param>
         /// <param name="timeout">设置所发送的请求超时时间</param>
