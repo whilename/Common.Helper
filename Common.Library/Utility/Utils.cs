@@ -1,13 +1,15 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
+using System.Text;
 using System.IO;
+using System.Net;
 using System.Reflection;
 using System.Security.Cryptography;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Http.Controllers;
@@ -50,12 +52,12 @@ namespace Common.Utility
 
         /*
         /// <summary>图文识别</summary>
-        /// <param name="imgpath"></param>
+        /// <param name="imgPath"></param>
         /// <returns></returns>
-        public static string ImageToString(string imgpath)
+        public static string ImageToString(string imgPath)
         {
             MODI.Document doc = new MODI.Document(); // 需要office 2007 Microsoft Office Document Imaging 组件
-            doc.Create(imgpath);
+            doc.Create(imgPath);
             MODI.Image image;
             MODI.Layout layout;
             doc.OCR(MODI.MiLANGUAGES.miLANG_CHINESE_SIMPLIFIED, true, true); // 识别简体中文
@@ -110,6 +112,14 @@ namespace Common.Utility
         #endregion
 
         #region HttpHelper
+
+        /// <summary>获取本地IPv4地址</summary>
+        public static string GetHostIPV4()
+        {
+            string strHostName = Dns.GetHostName(); //得到本机的主机名
+            IPHostEntry ipEntry = Dns.GetHostEntry(strHostName); //取得本机IP            
+            return ipEntry.AddressList.Where(x => x.ToString().IndexOf(".") > 0).First().ToString();
+        }
 
         /// <summary>获取IP地址</summary>
         public static string GetCustomerIp()
@@ -256,18 +266,38 @@ namespace Common.Utility
         /// <param name="oTo">目标对象</param>
         public static void ObjectCopyValue(object oFrom, object oTo)
         {
-            Type of = oFrom.GetType();
-            Type ot = oTo.GetType();
-            PropertyInfo[] propsFromt = of.GetProperties();
-            PropertyInfo[] propsTot = of.GetProperties();
-            foreach (PropertyInfo fromp in propsFromt)
+            // 获取对象的公共属性(带get/set访问器)
+            PropertyInfo[] propsF = oFrom.GetType().GetProperties();
+            PropertyInfo[] propsT = oTo.GetType().GetProperties();
+            foreach (PropertyInfo pFrom in propsF)
             {
-                string fName = fromp.Name.ToUpper();
-                foreach (PropertyInfo top in propsTot)
+                foreach (PropertyInfo pTo in propsT)
                 {
-                    if (fName.Equals(top.Name.ToUpper()))
+                    if (pFrom.Name.Equals(pTo.Name, StringComparison.CurrentCultureIgnoreCase))
                     {
-                        try { top.SetValue(oTo, fromp.GetValue(oFrom, null), null); }
+                        try { pTo.SetValue(oTo, pFrom.GetValue(oFrom, null), null); }
+                        catch (Exception ex) { Log.Error(ex); }
+                        break;
+                    }
+                }
+            }
+        }
+
+        /// <summary>对象同名同类型字段值复制</summary>
+        /// <param name="oFrom">源对象</param>
+        /// <param name="oTo">目标对象</param>
+        public static void ObjectCopyFieldValue(object oFrom, object oTo)
+        {
+            // 获取对象的所有公共字段
+            FieldInfo[] fieldsF = oFrom.GetType().GetFields();
+            FieldInfo[] fieldsT = oTo.GetType().GetFields();
+            foreach (FieldInfo fFrom in fieldsF)
+            {
+                foreach (FieldInfo fTo in fieldsT)
+                {
+                    if (fFrom.Name.Equals(fTo.Name, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        try { fTo.SetValue(oTo, fFrom.GetValue(oFrom)); }
                         catch (Exception ex) { Log.Error(ex); }
                         break;
                     }
@@ -277,11 +307,11 @@ namespace Common.Utility
 
         /// <summary>将指定对象转换成url参数字符串</summary>
         /// <param name="obj">需要转换的对象</param>
-        /// <param name="trim_empty">是否去除空值属性字段，默认true去除，false不去除</param>
-        /// <param name="kayvalue">是否字段名加性值，默认true，false单值</param>
+        /// <param name="trimEmpty">是否去除空值属性字段，默认true去除，false不去除</param>
+        /// <param name="keyValue">是否字段名加性值，默认true，false单值</param>
         /// <param name="fromat">拼接格式，配合keyvalue使用，默认字段名加值,Fromat("{0}{1}",fieldname,value)</param>
         /// <returns></returns>
-        public static string ObjJoinStr(object obj, bool trim_empty = true, bool kayvalue = true, string fromat = "{0}{1}")
+        public static string ObjectJoinString(object obj, bool trimEmpty = true, bool keyValue = true, string fromat = "{0}{1}")
         {
             StringBuilder url_str = new StringBuilder();
             // 按键排序的键/值对集合
@@ -294,13 +324,13 @@ namespace Common.Utility
                 // 获取属性值
                 value = props[i].GetValue(obj, null);
                 // 去除值为空
-                if (trim_empty && value == null) { continue; }
+                if (trimEmpty && value == null) { continue; }
                 sort_dic.Add(props[i].Name, value);
             }
             foreach (var item in sort_dic)
             {
                 // 拼接字符串
-                if (kayvalue) { url_str.AppendFormat(fromat, item.Key, item.Value); }
+                if (keyValue) { url_str.AppendFormat(fromat, item.Key, item.Value); }
                 else { url_str.Append(item.Value); }
             }
             return url_str.ToString();
