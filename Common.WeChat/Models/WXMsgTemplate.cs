@@ -30,10 +30,15 @@ namespace WeChat.Models
     /// <summary>模板1</summary>
     public class TemplateA
     {
+        /// <summary></summary>
         public KeyValue first { get; set; }
+        /// <summary></summary>
         public KeyValue keyword1 { get; set; }
+        /// <summary></summary>
         public KeyValue keyword2 { get; set; }
+        /// <summary></summary>
         public KeyValue keyword3 { get; set; }
+        /// <summary></summary>
         public KeyValue remark { get; set; }
     }
 }

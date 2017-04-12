@@ -13,8 +13,10 @@ using System.Windows.Forms;
 
 namespace WinFormsApp
 {
+    /// <summary></summary>
     public partial class ハルヒ : Form
     {
+        /// <summary></summary>
         public ハルヒ()
         {
             InitializeComponent();
@@ -80,6 +82,7 @@ namespace WinFormsApp
             }
         }
 
+        /// <summary></summary>
         private void ハルヒ_Load(object sender, EventArgs e)
         {
             //this.FillData();
@@ -87,12 +90,14 @@ namespace WinFormsApp
             //ImageAnimator.Animate(WinFormsApp.Properties.Resources.ハルヒ,OnFrameChanged);
         }
 
+        /// <summary></summary>
         private void OnFrameChanged(object sender, EventArgs e)
         {
             ImageAnimator.UpdateFrames();
             this.Invalidate();
         }
 
+        /// <summary></summary>
         private void ハルヒ_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)

@@ -1,14 +1,18 @@
-﻿using System;
+﻿using Common.Utility;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace ConsoleApp
 {
+    /// <summary></summary>
     public class Program
     {
+        /// <summary></summary>
         static void Main(string[] args)
         {
+            int code =  Utils.MD5Hash(Guid.NewGuid().ToString()).GetHashCode();
             List<char> chars = new List<char>();//abcdefg
             // 小写26字母
             for (int i = 97; i < 123; i++) { chars.Add((char)i); }

@@ -13,7 +13,9 @@ namespace WeChat
     /// <summary>微信公共处理类</summary>
     public class WXCommon
     {
+        /// <summary>缓存Token</summary>
         public static WXAccessToken AccessToken { get; private set; }
+        /// <summary>缓存Ticket</summary>
         public static WXTicket JsApiTicket { get; private set; }
 
         /// <summary>缓存微信鉴权信息</summary>
