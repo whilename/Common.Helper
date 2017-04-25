@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
@@ -23,15 +24,21 @@ namespace Common.AdoNet
             Windows
         }
 
-        private DbConnection dbcon;
+        /// <summary>数据库事务对象</summary>
         private DbTransaction dbtrans;
+        /// <summary>数据库源实例工厂</summary>
         private DbProviderFactory mfactory;
-        private string mstrTaihiSQL = String.Empty;
 
         #region 构造
         /// <summary>构造一个数据库操作类的实例</summary>
         public DbHelper()
         {
+            connection_string = ConfigurationManager.ConnectionStrings[APPSETTING_KEY].ConnectionString;
+            // 获取数据库链接配置
+            if (string.IsNullOrEmpty(connection_string)) { throw new Exception("未能在config文件中找到数据库链接配置"); }
+            string provider = ConfigurationManager.ConnectionStrings[APPSETTING_KEY].ProviderName;
+            // 获取数据库链接提供程序名称
+            if (!string.IsNullOrEmpty(provider)) { dbprovider = provider; }
             mfactory = DbProviderFactories.GetFactory(dbprovider);
             dbcon = this.CreateNewConnection();
         }
@@ -39,9 +46,9 @@ namespace Common.AdoNet
         /// <summary>指定connectionstring构造一个数据库操作类的实例</summary>
         /// <param name="connectionstring">数据库连接字符串</param>
         /// <param name="providername">连接驱动名</param>
-        public DbHelper(string connectionstring, string providername)
+        public DbHelper(string connectionstring, string providername = null)
         {
-            dbprovider = providername;
+            if (!string.IsNullOrEmpty(providername)) { dbprovider = providername; }
             connection_string = connectionstring;
             mfactory = DbProviderFactories.GetFactory(dbprovider);
             dbcon = this.CreateNewConnection();
@@ -57,8 +64,7 @@ namespace Common.AdoNet
         {
             // 关闭连接
             this.Close();
-            if (OnDispose != null)
-                OnDispose(this, new EventArgs());
+            if (OnDispose != null) { OnDispose(this, new EventArgs()); }
             dbcon.Dispose();
             dbcon = null;
             System.GC.SuppressFinalize(this);
@@ -68,8 +74,8 @@ namespace Common.AdoNet
 
         #region property
 
-        private string dbprovider = String.Empty;
-        /// <summary>数据提供者名称</summary>
+        private string dbprovider = SQL_PROVIDERNAME;
+        /// <summary>提供程序名称</summary>
         public string DbProvider
         {
             get { return dbprovider; }
@@ -84,9 +90,11 @@ namespace Common.AdoNet
             set { connection_string = value; }
         }
 
+        private DbConnection dbcon;
         /// <summary>当前数据库连接</summary>
         public DbConnection DBConnection { get { return dbcon; } }
 
+        private string mstrTaihiSQL = String.Empty;
         /// <summary>取得最后一次执行的sql语句</summary>
         public string TaihiSQL { get { return mstrTaihiSQL; } }
 

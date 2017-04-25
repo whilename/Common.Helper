@@ -12,6 +12,9 @@ namespace ConsoleApp
         /// <summary></summary>
         static void Main(string[] args)
         {
+            decimal num = 0.012m;
+            string ss = num.ToString("#0.#%");
+            Console.Write(ss);
             int code =  Utils.MD5Hash(Guid.NewGuid().ToString()).GetHashCode();
             List<char> chars = new List<char>();//abcdefg
             // 小写26字母
