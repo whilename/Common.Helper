@@ -88,10 +88,29 @@ namespace Common.AdoNet
             // 获取查询sql
             string query_sql = QuerySQL(Columns, conditions);
             // 是否有排序
-            string order_by = string.IsNullOrEmpty(orderby) ? string.Empty : string.Format(" ORDER BY {0} ", orderby);
+            string order_by = string.IsNullOrEmpty(orderby) ? string.Empty : string.Format(" ORDER BY {0} desc ", orderby);
             // 拼接分页查询sql
-            string query_page_sql = string.Format("SELECT * FROM({0}) {1} desc OFFSET {2} ROWS FETCH NEXT {3} ROWS ONLY", query_sql, order_by, page.OffSet, page.Next);
+            string query_page_sql = string.Format("SELECT * FROM({0}) {1} OFFSET {2} ROWS FETCH NEXT {3} ROWS ONLY", query_sql, order_by, page.OffSet, page.Next);
             return db_helper.DBConnection.Query<T>(query_page_sql);
+        }
+
+        /// <summary>SQL ROW_NUMBER方式分页查询符合条件的所有数据</summary>
+        /// <param name="page"></param>
+        /// <param name="conditions"></param>
+        /// <param name="orderby"></param>
+        /// <returns></returns>
+        public IEnumerable<T> FindAllForRowNumByPage(SqlPage page, object conditions, string orderby)
+        {
+            // 获取总行数
+            page.Rows = this.Count(conditions);
+            // 获取查询sql
+            string query_sql = QuerySQL(Columns, conditions);
+            query_sql.Insert(5, string.Format(" ROW_NUMBER() OVER (ORDER BY {0}) AS RowNumber,", orderby));
+            // 是否有排序
+            string order_by = string.IsNullOrEmpty(orderby) ? string.Empty : string.Format(" ORDER BY {0} desc ", orderby);
+            // 拼接分页查询sql
+            string query_page_sql_row_num = string.Format("SELECT TOP({0}) * FROM({1})T WHERE RowNumber>{2} {3}", page.Size, query_sql, page.OffSet, order_by);
+            return db_helper.DBConnection.Query<T>(query_page_sql_row_num);
         }
 
         /// <summary>获取执行sql</summary>
