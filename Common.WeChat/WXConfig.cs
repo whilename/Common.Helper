@@ -22,21 +22,21 @@ namespace WeChat
         internal static string KEY { get; private set; }
         internal static string SECRET { get; private set; }
 
-        // 微信授权地址
+        // 微信授权
         internal static string OAUTH2_AUTHORIZE_URL = "https://open.weixin.qq.com/connect/oauth2/authorize";
-        // 微信授权获取access token地址
+        // 微信授权获取access token
         internal static string OAUTH2_ACCESS_TOKEN_URL = "https://api.weixin.qq.com/sns/oauth2/access_token";
-        // 获取授权用户信息地址
+        // 获取授权用户信息
         internal static string OAUTH2_USERINFO_URL = "https://api.weixin.qq.com/sns/userinfo";
-        // 获取微信用户信息地址
+        // 获取微信用户信息
         internal static string CGIBIN_USERINFO_URL = "https://api.weixin.qq.com/cgi-bin/user/info";
-        // 获取一般access token地址
+        // 获取一般access token
         internal static string ACCESS_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential";
-        // 获取微信JS-SDK权限票据地址
+        // 获取微信JS-SDK权限票据
         internal static string GETTICKET_URL = "https://api.weixin.qq.com/cgi-bin/ticket/getticket";
-        // 微信支付预订单请求地址
-        internal static string PAY_UNIFIEDORDER_URL = "https://api.weixin.qq.com/cgi-bin/ticket/getticket";
-        // 微信模板消息推送请求地址
+        // 微信支付预订单
+        internal static string PAY_UNIFIEDORDER_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+        // 微信模板消息推送
         internal static string SEND_MSG_TEMPLATE_URL = "https://api.weixin.qq.com/cgi-bin/message/template/send";
 
         /// <summary>系统初始化配置</summary>
