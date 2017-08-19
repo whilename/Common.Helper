@@ -12,6 +12,13 @@ namespace ConsoleApp
         /// <summary></summary>
         static void Main(string[] args)
         {
+            DateTime begin = Convert.ToDateTime("1920-01-01");
+            DateTime birthday = Convert.ToDateTime("20080815".Insert(6, "-").Insert(4, "-"));
+            int year = birthday.Year - begin.Year;
+            begin = begin.AddYears(year);
+            int day = (int)(birthday - begin).TotalDays;
+            Console.WriteLine("{0}岁零{1}天", year, day);
+
             decimal num = 0.012m;
             string ss = num.ToString("#0.#%");
             Console.Write(ss);

@@ -50,6 +50,15 @@ namespace Common.AdoNet
             db_helper = new DbHelper(connectionString, providerName);
         }
 
+        /// <summary>执行sql并返回受影响值</summary>
+        /// <param name="sqlstr">执行的SQL</param>
+        /// <param name="param">参数</param>
+        /// <returns></returns>
+        public int Execute(string sqlstr, object param = null)
+        {
+            return db_helper.DBConnection.Execute(sqlstr, param);
+        }
+
         /// <summary>统计数量</summary>
         /// <param name="conditions">条件</param>
         /// <returns></returns>
