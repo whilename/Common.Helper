@@ -42,9 +42,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\WXErrorMsg.cs" />
     <Compile Include="Models\WXAccessToken.cs" />
     <Compile Include="Models\WXBaseModel.cs" />
     <Compile Include="Models\WXJSConfig.cs" />
+    <Compile Include="Models\WXMenus.cs" />
     <Compile Include="Models\WXMsgTemplate.cs" />
     <Compile Include="Models\WXPayUnifiedorder.cs" />
     <Compile Include="Models\WXPayUnifiedorderResponse.cs" />

@@ -46,7 +46,7 @@ namespace WeChat
         public static string Oauth2Authorize(string callbackurl, string state, bool silent = true)
         {
             // 微信授权请求地址
-            string oauth2_url = string.Format("{0}?appid={1}&redirect_uri={2}&response_type=code&scope={3}&state={4}#wechat_redirect",
+            string oauth2_url = "{0}?appid={1}&redirect_uri={2}&response_type=code&scope={3}&state={4}#wechat_redirect".StrFormat(
                 WXConfig.OAUTH2_AUTHORIZE_URL, WXConfig.APPID, Utils.GetUrlEncode(callbackurl),
                 (silent ? "snsapi_base" : "snsapi_userinfo"), Utils.GetUrlEncode(state));
             // snsapi_base （不弹出授权页面，直接跳转，只能获取用户openid）
@@ -62,7 +62,7 @@ namespace WeChat
         public static WXUserInfo GetUserInfo(WXAccessToken acctoken, bool oauth2 = true)
         {
             // 获取微信用户信息请求地址
-            string userinfo_url = string.Format("{0}?access_token={1}&openid={2}&lang=zh_CN",
+            string userinfo_url = "{0}/sns/userinfo?access_token={1}&openid={2}&lang=zh_CN".StrFormat(
                 oauth2 ? WXConfig.OAUTH2_USERINFO_URL : WXConfig.CGIBIN_USERINFO_URL, acctoken.access_token, acctoken.openid);
             // 获取微信用户信息
             WXUserInfo user_info = WebHttp.SendGet<WXUserInfo>(userinfo_url.ToString());
@@ -80,7 +80,7 @@ namespace WeChat
         public static WXAccessToken GetAccessToken(string code)
         {
             // 微信oauth2授权请求地址及参数
-            string access_token_url = string.Format("{0}?appid={1}&secret={2}&code={3}&grant_type=authorization_code",
+            string access_token_url = "{0}/sns/oauth2/access_token?appid={1}&secret={2}&code={3}&grant_type=authorization_code".StrFormat(
                 WXConfig.OAUTH2_ACCESS_TOKEN_URL, WXConfig.APPID, WXConfig.SECRET, code);
             // 微信获取oauth2授权access_token
             WXAccessToken access_token = WebHttp.SendGet<WXAccessToken>(access_token_url);
@@ -93,7 +93,8 @@ namespace WeChat
         private static WXAccessToken GetAccessToken()
         {
             // 微信授权信息请求地址及参数
-            string access_token_url = "{0}&appid={1}&secret={2}".StrFormat(WXConfig.ACCESS_TOKEN_URL, WXConfig.APPID, WXConfig.SECRET);
+            string access_token_url = "{0}/cgi-bin/token?grant_type=client_credential&appid={1}&secret={2}".StrFormat(
+                WXConfig.ACCESS_TOKEN_URL, WXConfig.APPID, WXConfig.SECRET);
             // GET请求微信授权，回传AccessToken信息
             WXAccessToken access_token = WebHttp.SendGet<WXAccessToken>(access_token_url.ToString());
             // 记录请求与回传信息
@@ -109,7 +110,8 @@ namespace WeChat
         /// <returns></returns>
         private static WXTicket GetJSApiTicket()
         {
-            string getticket_url = "{0}?access_token={1}&type=jsapi".StrFormat(WXConfig.GETTICKET_URL, WXCommon.AccessToken.access_token);
+            string getticket_url = "{0}/cgi-bin/ticket/getticket?access_token={1}&type=jsapi".StrFormat(
+                WXConfig.GETTICKET_URL, WXCommon.AccessToken.access_token);
             // GET请求微信接口，回传JS-SDK权限信息
             WXTicket ticket = WebHttp.SendGet<WXTicket>(getticket_url.ToString());
             // 记录请求与回传信息
@@ -139,17 +141,36 @@ namespace WeChat
 
         #endregion
 
+        #region Menu Create
+
+        /// <summary>自定义菜单创建</summary>
+        /// <param name="mus">菜单</param>
+        public static WXErrorMsg MenuCreate(WXMenus mus)
+        {
+            string menu_manager_url = "{0}/cgi-bin/menu/create?access_token={1}".StrFormat(
+                WXConfig.MENU_MANAGER_URL, AccessToken.access_token);
+            string param = Utils.JsonSerialize(mus);
+            // 创建自定义菜单
+            WXErrorMsg result = WebHttp.SendPost<WXErrorMsg>(menu_manager_url, param);
+            Log.Info("Create WeChat Menus:{0} \n Params:{1} \n Response：{2}",
+                menu_manager_url, param, Utils.JsonSerialize(result));
+            return result;
+
+        }
+
+        #endregion
+
         #region Message
 
         /// <summary>微信模板消息</summary>
         /// <param name="template">消息对象信息</param>
-        public static object SendMsg(WXMsgTemplate template)
+        public static WXErrorMsg SendMsg(WXMsgTemplate template)
         {
-            string send_msg_url = string.Format("{0}?access_token={1}",
+            string send_msg_url = "{0}/cgi-bin/message/template/send?access_token={1}".StrFormat(
                 WXConfig.SEND_MSG_TEMPLATE_URL, AccessToken.access_token);
             string param = Utils.JsonSerialize(template);
             // 发送模板消息
-            object result = WebHttp.SendPost<object>(send_msg_url, param);
+            WXErrorMsg result = WebHttp.SendPost<WXErrorMsg>(send_msg_url, param);
             Log.Info("Send WeChat Template Msg:{0} \n Params:{1} \n Response：{2}",
                 send_msg_url, param, Utils.JsonSerialize(result));
             return result;
