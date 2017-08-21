@@ -25,19 +25,22 @@ namespace WeChat
         // 微信授权
         internal static string OAUTH2_AUTHORIZE_URL = "https://open.weixin.qq.com/connect/oauth2/authorize";
         // 微信授权获取access token
-        internal static string OAUTH2_ACCESS_TOKEN_URL = "https://api.weixin.qq.com/sns/oauth2/access_token";
+        internal static string OAUTH2_ACCESS_TOKEN_URL = "https://api.weixin.qq.com";
         // 获取授权用户信息
-        internal static string OAUTH2_USERINFO_URL = "https://api.weixin.qq.com/sns/userinfo";
+        internal static string OAUTH2_USERINFO_URL = "https://api.weixin.qq.com";
         // 获取微信用户信息
-        internal static string CGIBIN_USERINFO_URL = "https://api.weixin.qq.com/cgi-bin/user/info";
+        internal static string CGIBIN_USERINFO_URL = "https://api.weixin.qq.com";
         // 获取一般access token
-        internal static string ACCESS_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential";
+        internal static string ACCESS_TOKEN_URL = "https://api.weixin.qq.com";
         // 获取微信JS-SDK权限票据
-        internal static string GETTICKET_URL = "https://api.weixin.qq.com/cgi-bin/ticket/getticket";
+        internal static string GETTICKET_URL = "https://api.weixin.qq.com";
+        // 微信模板消息推送
+        internal static string SEND_MSG_TEMPLATE_URL = "https://api.weixin.qq.com";
+        // 自定义菜单创建接口
+        internal static string MENU_MANAGER_URL = "https://api.weixin.qq.com";
+
         // 微信支付预订单
         internal static string PAY_UNIFIEDORDER_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
-        // 微信模板消息推送
-        internal static string SEND_MSG_TEMPLATE_URL = "https://api.weixin.qq.com/cgi-bin/message/template/send";
 
         /// <summary>系统初始化配置</summary>
         public static void Register()
