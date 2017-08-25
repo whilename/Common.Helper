@@ -163,7 +163,7 @@ namespace Common.Utility.Redis
         {
             using (RedisClient redis = prcm.GetClient() as RedisClient)
             {
-                redis.Set<T>(key, entity);
+                redis.Set<T>(key, entity, expire);
             }
         }
 
