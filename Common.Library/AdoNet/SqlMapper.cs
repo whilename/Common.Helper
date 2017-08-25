@@ -49,6 +49,18 @@ namespace Common.AdoNet
             _table_name = tableName;
             db_helper = new DbHelper(connectionString, providerName);
         }
+        
+        /// <summary>开始事务处理</summary>
+        /// <returns></returns>
+        public void TrnStart() { db_helper.TrnStart(); }
+        
+        /// <summary>提交事务</summary>
+        /// <returns></returns>
+        public void TrnCommit() { db_helper.TrnCommit(); }
+        
+        /// <summary>撤销事务</summary>
+        /// <returns></returns>
+        public void TrnRollBack() { db_helper.TrnRollBack(); }
 
         /// <summary>执行sql并返回受影响值</summary>
         /// <param name="sqlstr">执行的SQL</param>
@@ -56,7 +68,7 @@ namespace Common.AdoNet
         /// <returns></returns>
         public int Execute(string sqlstr, object param = null)
         {
-            return db_helper.DBConnection.Execute(sqlstr, param);
+            return db_helper.DBConnection.Execute(sqlstr, param, db_helper.dbtrans);
         }
 
         /// <summary>统计数量</summary>
@@ -64,7 +76,7 @@ namespace Common.AdoNet
         /// <returns></returns>
         public int Count(object conditions)
         {
-            return db_helper.DBConnection.QuerySingle<int>(QuerySQL("count(*)", conditions, null));
+            return db_helper.DBConnection.QuerySingle<int>(QuerySQL("count(*)", conditions, null), conditions);
         }
 
         /// <summary>查询符合条件的第一条数据</summary>
@@ -73,7 +85,7 @@ namespace Common.AdoNet
         /// <returns></returns>
         public T FindSingle(object conditions, string orderby)
         {
-            return db_helper.DBConnection.QuerySingle<T>(QuerySQL(Columns, conditions, orderby));
+            return db_helper.DBConnection.QuerySingle<T>(QuerySQL(Columns, conditions, orderby), conditions);
         }
 
         /// <summary>查询符合条件的所有数据</summary>
@@ -82,7 +94,7 @@ namespace Common.AdoNet
         /// <returns></returns>
         public IEnumerable<T> FindAll(object conditions, string orderby)
         {
-            return db_helper.DBConnection.Query<T>(QuerySQL(Columns, conditions, orderby));
+            return db_helper.DBConnection.Query<T>(QuerySQL(Columns, conditions, orderby), conditions);
         }
 
         /// <summary>分页查询符合条件的所有数据</summary>
@@ -100,7 +112,7 @@ namespace Common.AdoNet
             string order_by = string.IsNullOrEmpty(orderby) ? string.Empty : string.Format(" ORDER BY {0} desc ", orderby);
             // 拼接分页查询sql
             string query_page_sql = string.Format("SELECT * FROM({0}) {1} OFFSET {2} ROWS FETCH NEXT {3} ROWS ONLY", query_sql, order_by, page.OffSet, page.Next);
-            return db_helper.DBConnection.Query<T>(query_page_sql);
+            return db_helper.DBConnection.Query<T>(query_page_sql, conditions);
         }
 
         /// <summary>SQL ROW_NUMBER方式分页查询符合条件的所有数据</summary>
@@ -119,7 +131,7 @@ namespace Common.AdoNet
             string order_by = string.IsNullOrEmpty(orderby) ? string.Empty : string.Format(" ORDER BY {0} desc ", orderby);
             // 拼接分页查询sql
             string query_page_sql_row_num = string.Format("SELECT TOP({0}) * FROM({1})T WHERE RowNumber>{2} {3}", page.Size, query_sql, page.OffSet, order_by);
-            return db_helper.DBConnection.Query<T>(query_page_sql_row_num);
+            return db_helper.DBConnection.Query<T>(query_page_sql_row_num, conditions);
         }
 
         /// <summary>获取执行sql</summary>

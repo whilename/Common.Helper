@@ -25,7 +25,7 @@ namespace Common.AdoNet
         }
 
         /// <summary>数据库事务对象</summary>
-        private DbTransaction dbtrans;
+        internal DbTransaction dbtrans;
         /// <summary>数据库源实例工厂</summary>
         private DbProviderFactory mfactory;
 
@@ -92,7 +92,14 @@ namespace Common.AdoNet
 
         private DbConnection dbcon;
         /// <summary>当前数据库连接</summary>
-        public DbConnection DBConnection { get { return dbcon; } }
+        public DbConnection DBConnection
+        {
+            get
+            {
+                if (dbcon.State == System.Data.ConnectionState.Closed) { this.Open(); }
+                return dbcon;
+            }
+        }
 
         private string mstrTaihiSQL = String.Empty;
         /// <summary>取得最后一次执行的sql语句</summary>

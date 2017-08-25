@@ -26,7 +26,7 @@ namespace Common.Utility
         public static T SendPost<T>(string url, string param)
         {
             string contenttype = "application/json";
-            var result = SendHttpRequeset(url, param, "post", contenttype);
+            var result = SendHttpRequeset(url, param, "post", "utf-8", 0, contenttype);
             return (T)DeserializeObject<T>(result);
         }
 

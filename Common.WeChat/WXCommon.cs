@@ -31,7 +31,7 @@ namespace WeChat
                         WXCommon.JsApiTicket = WXCommon.GetJSApiTicket();// 缓存Ticket信息
                     }
                     catch (Exception ex) { Log.Error(ex); }
-                    finally { Thread.Sleep(7000000); }// 为避免CPU空转，在队列为空时休息2秒
+                    finally { Thread.Sleep(7000000); }// 为避免CPU空转，在队列为空时休息2小时
                 }
             });
         }
