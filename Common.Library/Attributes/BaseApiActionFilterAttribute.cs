@@ -25,6 +25,14 @@ namespace Common.Library.Attributes
             return Utils.GetFromBody(context, key);
         }
 
+        /// <summary>在执行Action后处理</summary>
+        /// <param name="filterContext"></param>
+        public override void OnActionExecuted(HttpActionExecutedContext filterContext)
+        {
+            this.OnAllowOriginExcute(filterContext);
+            base.OnActionExecuted(filterContext);
+        }
+
         /// <summary>检查允许跨域请求站点</summary>
         /// <param name="context">操作上下文</param>
         public virtual void OnAllowOriginExcute(HttpActionExecutedContext context)
