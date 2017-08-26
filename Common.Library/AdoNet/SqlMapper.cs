@@ -71,6 +71,15 @@ namespace Common.AdoNet
             return db_helper.DBConnection.Execute(sqlstr, param, db_helper.dbtrans);
         }
 
+        /// <summary>执行sql并返回受影响值</summary>
+        /// <param name="sqlstr">执行的SQL</param>
+        /// <param name="param">参数</param>
+        /// <returns></returns>
+        public O Execute<O>(string sqlstr, object param = null)
+        {
+            return db_helper.DBConnection.ExecuteScalar<O>(sqlstr, param, db_helper.dbtrans);
+        }
+
         /// <summary>统计数量</summary>
         /// <param name="conditions">条件</param>
         /// <returns></returns>
@@ -88,13 +97,22 @@ namespace Common.AdoNet
             return db_helper.DBConnection.QuerySingle<T>(QuerySQL(Columns, conditions, orderby), conditions);
         }
 
-        /// <summary>查询符合条件的所有数据</summary>
+        /// <summary>查找符合条件的所有数据</summary>
         /// <param name="conditions">条件</param>
         /// <param name="orderby">排序条件</param>
         /// <returns></returns>
         public IEnumerable<T> FindAll(object conditions, string orderby)
         {
             return db_helper.DBConnection.Query<T>(QuerySQL(Columns, conditions, orderby), conditions);
+        }
+
+        /// <summary>查询符合条件的所有数据</summary>
+        /// <param name="sqlstr">T-SQL</param>
+        /// <param name="conditions">条件</param>
+        /// <returns></returns>
+        public IEnumerable<O> Query<O>(string sqlstr,object conditions)
+        {
+            return db_helper.DBConnection.Query<O>(sqlstr, conditions, db_helper.dbtrans);
         }
 
         /// <summary>分页查询符合条件的所有数据</summary>
