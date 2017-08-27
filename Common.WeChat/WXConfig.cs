@@ -40,13 +40,13 @@ namespace WeChat
                     Initialize("wx165579c7fca21c14", "", "", "dcd8424687ebdf63e116aca973ddc645");
                     break;
                 case "test":
-                    Initialize("wx165579c7fca21c14", "", "", "dcd8424687ebdf63e116aca973ddc645");
+                    Initialize("wx35342ac41e22b328", "", "", "d4624c36b6795d1d99dcf0547af5443d");
                     break;
                 case "pro":
-                    Initialize("wx165579c7fca21c14", "", "", "dcd8424687ebdf63e116aca973ddc645");
+                    Initialize("", "", "", "");
                     break;
                 default:
-                    Initialize("wx165579c7fca21c14", "", "", "dcd8424687ebdf63e116aca973ddc645");
+                    Initialize("wx35342ac41e22b328", "", "", "d4624c36b6795d1d99dcf0547af5443d");
                     break;
             }
         }
