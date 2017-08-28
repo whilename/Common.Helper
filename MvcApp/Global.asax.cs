@@ -1,4 +1,5 @@
 ﻿using Common.Utility;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -23,8 +24,10 @@ namespace MvcApp
             // 移除所有视图引擎
             ViewEngines.Engines.Clear();
             // 添加Razor视图引擎
-            ViewEngines.Engines.Add(new RazorViewEngine()); 
+            ViewEngines.Engines.Add(new RazorViewEngine());
             AreaRegistration.RegisterAllAreas();
+            GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.
+                Converters.Add(new IsoDateTimeConverter { DateTimeFormat = "yyyy'-'MM'-'dd' 'HH':'mm':'ss" });
 
             WebApiConfig.Register(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
