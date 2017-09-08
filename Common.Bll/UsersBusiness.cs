@@ -1,11 +1,11 @@
-﻿using Common.Dao;
-using Common.Models;
+﻿using Mobile.Dao;
+using Mobile.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Common.Bll
+namespace Mobile.Bll
 {
     /// <summary></summary>
     public class UsersBusiness

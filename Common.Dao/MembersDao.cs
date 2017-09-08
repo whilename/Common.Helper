@@ -1,11 +1,11 @@
 ﻿using Common.AdoNet;
-using Common.Models;
+using Mobile.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Common.Dao
+namespace Mobile.Dao
 {
     /// <summary></summary>
     public class MembersDao : SqlMapper<MembersEntity>

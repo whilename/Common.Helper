@@ -27,6 +27,8 @@ namespace WeChat.Models
         /// <summary>只有在用户将公众号绑定到微信开放平台帐号后，才会出现该字段。详见：获取用户个人信息（UnionID机制）</summary>
         public string unionid { get; set; }
 
+        /// <summary>用户的语言，简体中文为zh_CN</summary>
+        public string language { get; set; }
         /// <summary>用户是否订阅该公众号标识，值为0时，代表此用户没有关注该公众号，拉取不到其余信息。</summary>
         public int subscribe { get; set; }
         /// <summary>用户关注时间，为时间戳。如果用户曾多次关注，则取最后关注时间</summary>
@@ -35,6 +37,8 @@ namespace WeChat.Models
         public string remark { get; set; }
         /// <summary>用户所在的分组ID</summary>
         public int groupid { get; set; }
+        /// <summary>用户被打上的标签ID列表</summary>
+        public List<int> tagid_list { get; set; }
 
     }
 }

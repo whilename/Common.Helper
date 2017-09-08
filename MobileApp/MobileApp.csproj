@@ -29,6 +29,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\MobileApp.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -272,17 +273,17 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common.Bll\Common.Bll.csproj">
+    <ProjectReference Include="..\Common.Bll\Mobile.Bll.csproj">
       <Project>{5b6606f7-daba-4395-a508-527fcef9a320}</Project>
-      <Name>Common.Bll</Name>
+      <Name>Mobile.Bll</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common.Library\Common.Library.csproj">
       <Project>{15c4790d-4939-4c8f-8050-eab573c4b0b1}</Project>
       <Name>Common.Library</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common.Models\Common.Models.csproj">
+    <ProjectReference Include="..\Common.Models\Mobile.Models.csproj">
       <Project>{656ed40a-3adc-444c-8521-e6dd79cce5ec}</Project>
-      <Name>Common.Models</Name>
+      <Name>Mobile.Models</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common.WeChat\Common.WeChat.csproj">
       <Project>{e58ce2b3-ae0e-4ca0-b178-3f3b9ad2cb16}</Project>
