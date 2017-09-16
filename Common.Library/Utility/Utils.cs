@@ -151,18 +151,6 @@ namespace Common.Utility
             return HttpContext.Current.Request.Url.Host;
         }
 
-        /// <summary>使用指定的编码对象对 URL 字符串进行编码。</summary>
-        public static string GetUrlEncode(string str, string code = "ASCII")
-        {
-            return HttpUtility.UrlEncode(str, Encoding.GetEncoding(code));
-        }
-
-        /// <summary>使用指定的编码对象将 URL 编码的字符串转换为已解码的字符串。</summary>
-        public static string GetUrlDecode(string str, string code = "ASCII")
-        {
-            return HttpUtility.UrlDecode(str, Encoding.GetEncoding(code));
-        }
-
         /// <summary>获取Url字符串中的请求参数字典</summary>
         /// <param name="url">Url字符串</param>
         /// <returns>请求参数字典</returns>

@@ -18,20 +18,27 @@ namespace WeChat
         /// <summary>缓存Ticket</summary>
         public static WXTicket JsApiTicket { get; private set; }
 
+        static bool IsFirstTime = true;
         /// <summary>缓存微信鉴权信息</summary>
         public static void Start()
         {
+            WXCommon.AccessToken = WXCommon.GetAccessToken();// 缓存AccessToken信息
+            WXCommon.JsApiTicket = WXCommon.GetJSApiTicket();// 缓存Ticket信息 
             ThreadPool.QueueUserWorkItem(o =>
             {
                 while (true)
                 {
                     try
                     {
-                        WXCommon.AccessToken = WXCommon.GetAccessToken();// 缓存AccessToken信息
-                        WXCommon.JsApiTicket = WXCommon.GetJSApiTicket();// 缓存Ticket信息
+                        if (IsFirstTime) { IsFirstTime = false; }
+                        else
+                        {
+                            WXCommon.AccessToken = WXCommon.GetAccessToken();// 缓存AccessToken信息
+                            WXCommon.JsApiTicket = WXCommon.GetJSApiTicket();// 缓存Ticket信息 
+                        }
                     }
                     catch (Exception ex) { Log.Error(ex); }
-                    finally { Thread.Sleep(7000000); }// 为避免CPU空转，在队列为空时休息2小时
+                    finally { Thread.Sleep(7000000); }// 为避免CPU空转，在队列为空时休息
                 }
             });
         }
@@ -47,8 +54,8 @@ namespace WeChat
         {
             // 微信授权请求地址
             string oauth2_url = "{0}?appid={1}&redirect_uri={2}&response_type=code&scope={3}&state={4}#wechat_redirect".StrFormat(
-                WXConfig.OAUTH2_AUTHORIZE_URL, WXConfig.APPID, Utils.GetUrlEncode(callbackurl),
-                (silent ? "snsapi_base" : "snsapi_userinfo"), Utils.GetUrlEncode(state));
+                WXConfig.OAUTH2_AUTHORIZE_URL, WXConfig.APPID, callbackurl.UrlEncode(),
+                (silent ? "snsapi_base" : "snsapi_userinfo"), state.UrlEncode());
             // snsapi_base （不弹出授权页面，直接跳转，只能获取用户openid）
             // snsapi_userinfo （弹出授权页面，可通过openid拿到昵称、性别、所在地。并且，即使在未关注的情况下，只要用户授权，也能获取其信息）
             Log.Info("Redirect WeChat Oauth2:{0}", oauth2_url);

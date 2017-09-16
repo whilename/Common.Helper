@@ -1,19 +1,22 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
+using Dapper;
 using System.Data.Common;
-using System.Linq;
-using System.Text;
+using System.Configuration;
+using Newtonsoft.Json;
 
 namespace Common.AdoNet
 {
     /// <summary>数据库操作类</summary>
     public class DbHelper : IDisposable
     {
-        private const string APPSETTING_KEY = "dbhelper_connectionstring";
+        private const string APPSETTING_KEY = "db_connectionstring";
         private const string SQL_PROVIDERNAME = "System.Data.SqlClient";
+        private int commontTimeout = 30;
+        /// <summary>Timeout</summary>
+        public int ComTimeout { get { return commontTimeout; } set { commontTimeout = value; } }
 
         /// <summary>身份验证模式</summary>
         public enum enmDBVerifyType
@@ -25,37 +28,30 @@ namespace Common.AdoNet
         }
 
         /// <summary>数据库事务对象</summary>
-        internal DbTransaction dbtrans;
+        public DbTransaction dbtrans;
         /// <summary>数据库源实例工厂</summary>
         private DbProviderFactory mfactory;
 
         #region 构造
+
         /// <summary>构造一个数据库操作类的实例</summary>
-        public DbHelper()
+        /// <param name="connectionstring">数据库连接字符串</param>
+        /// <param name="providername">连接驱动名</param>
+        public DbHelper(string connectionstring = null, string providername = null)
         {
-            connection_string = ConfigurationManager.ConnectionStrings[APPSETTING_KEY].ConnectionString;
-            // 获取数据库链接配置
+            // 获取/设置数据库链接配置
+            connection_string = string.IsNullOrEmpty(connectionstring) ? ConfigurationManager.ConnectionStrings[APPSETTING_KEY].ConnectionString : connectionstring;
             if (string.IsNullOrEmpty(connection_string)) { throw new Exception("未能在config文件中找到数据库链接配置"); }
-            string provider = ConfigurationManager.ConnectionStrings[APPSETTING_KEY].ProviderName;
-            // 获取数据库链接提供程序名称
-            if (!string.IsNullOrEmpty(provider)) { dbprovider = provider; }
-            mfactory = DbProviderFactories.GetFactory(dbprovider);
+            // 获取/设置数据库链接提供程序名称
+            provider_name = string.IsNullOrEmpty(providername) ? ConfigurationManager.ConnectionStrings[APPSETTING_KEY].ProviderName : providername;
+            mfactory = DbProviderFactories.GetFactory(provider_name);
             dbcon = this.CreateNewConnection();
         }
 
-        /// <summary>指定connectionstring构造一个数据库操作类的实例</summary>
-        /// <param name="connectionstring">数据库连接字符串</param>
-        /// <param name="providername">连接驱动名</param>
-        public DbHelper(string connectionstring, string providername = null)
-        {
-            if (!string.IsNullOrEmpty(providername)) { dbprovider = providername; }
-            connection_string = connectionstring;
-            mfactory = DbProviderFactories.GetFactory(dbprovider);
-            dbcon = this.CreateNewConnection();
-        }
         #endregion
 
         #region Dispose
+
         /// <summary>资源回收事件</summary>
         public EventHandler OnDispose { get; set; }
 
@@ -74,12 +70,12 @@ namespace Common.AdoNet
 
         #region property
 
-        private string dbprovider = SQL_PROVIDERNAME;
+        private string provider_name = SQL_PROVIDERNAME;
         /// <summary>提供程序名称</summary>
-        public string DbProvider
+        public string ProviderName
         {
-            get { return dbprovider; }
-            set { dbprovider = value; }
+            get { return provider_name; }
+            set { provider_name = value; }
         }
 
         private string connection_string = String.Empty;
@@ -148,7 +144,8 @@ namespace Common.AdoNet
         {
             if (dbcon.State == System.Data.ConnectionState.Closed) { this.Open(); }
             DbCommand cmd = dbcon.CreateCommand();
-            if (dbtrans != null) { cmd.Transaction = dbtrans; }            
+            cmd.CommandTimeout = ComTimeout;
+            if (dbtrans != null) { cmd.Transaction = dbtrans; }
             cmd.Parameters.Clear();// 清理执行sql的参数
             return cmd;
         }

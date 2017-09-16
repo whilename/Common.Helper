@@ -66,15 +66,16 @@ namespace Common.Utility
         /// <param name="url">地址</param>
         /// <param name="param">参数</param>
         /// <returns>本次请求的响应结果</returns>
-        public static HttpResponseMessage SendDelete(string url, string param)
+        public static T SendDelete<T>(string url, string param)
         {
-            return SendHttpRequeset(url, param, "delete");
+            var result = SendHttpRequeset(url, param, "delete");
+            return (T)DeserializeObject<T>(result);
         }
 
         #endregion
 
         #region SendHttpRequeset
-        
+
         /// <summary>发送请求</summary>
         /// <param name="url">地址</param>
         /// <param name="param">参数</param>
@@ -164,7 +165,7 @@ namespace Common.Utility
                 request.Abort();
                 return result;
             }
-            catch (Exception ex) { Log.Error(ex); return ex.Message; }
+            catch (Exception ex) { return ex.Message; }
         }
 
         /// <summary>发送POST请求，接受返回数据</summary>

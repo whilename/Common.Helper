@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Common.Extension
 {
@@ -26,6 +27,33 @@ namespace Common.Extension
         public static string SHA1Hash(this string str, string encoding = "UTF-8")
         {
             return Utils.SHA1Hash(str, encoding);
+        }
+
+        /// <summary>获取当前字符串Base64编码后的值(默认格式UTF-8)</summary>
+        /// <param name="str">当前字符对象</param>
+        /// <param name="encoding">编码格式,default utf-8</param>
+        /// <returns></returns>
+        public static string Base64(this string str, string encoding = "UTF-8")
+        {
+            return Convert.ToBase64String(Encoding.GetEncoding(encoding).GetBytes(str));
+        }
+
+        /// <summary>对字符串进行 URL 编码(默认格式UTF-8)。</summary>
+        /// <param name="str">当前字符对象</param>
+        /// <param name="encoding">编码格式,default utf-8</param>
+        /// <returns></returns>
+        public static string UrlEncode(this string str, string encoding = "UTF-8")
+        {
+            return HttpUtility.UrlEncode(str, Encoding.GetEncoding(encoding));
+        }
+
+        /// <summary>对字符串进行 URL 解码(默认格式UTF-8)。</summary>
+        /// <param name="str">当前字符对象</param>
+        /// <param name="encoding">编码格式,default utf-8</param>
+        /// <returns></returns>
+        public static string UrlDecode(this string str, string encoding = "UTF-8")
+        {
+            return HttpUtility.UrlDecode(str, Encoding.GetEncoding(encoding));
         }
 
         /// <summary>将指定字符串中的格式项替换为指定数组中相应对象的字符串表示形式。</summary>
@@ -118,5 +146,6 @@ namespace Common.Extension
         {
             return null == obj;
         }
+
     }
 }
