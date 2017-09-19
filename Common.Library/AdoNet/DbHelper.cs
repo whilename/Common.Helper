@@ -37,14 +37,11 @@ namespace Common.AdoNet
         /// <summary>构造一个数据库操作类的实例</summary>
         /// <param name="connectionstring">数据库连接字符串</param>
         /// <param name="providername">连接驱动名</param>
-        public DbHelper(string connectionstring = null, string providername = null)
+        public DbHelper(string connectionstring = APPSETTING_KEY, string providername = SQL_PROVIDERNAME)
         {
-            // 获取/设置数据库链接配置
-            connection_string = string.IsNullOrEmpty(connectionstring) ? ConfigurationManager.ConnectionStrings[APPSETTING_KEY].ConnectionString : connectionstring;
-            if (string.IsNullOrEmpty(connection_string)) { throw new Exception("未能在config文件中找到数据库链接配置"); }
-            // 获取/设置数据库链接提供程序名称
-            provider_name = string.IsNullOrEmpty(providername) ? ConfigurationManager.ConnectionStrings[APPSETTING_KEY].ProviderName : providername;
-            mfactory = DbProviderFactories.GetFactory(provider_name);
+            connection_string = connectionstring;
+            provider_name = providername;
+            mfactory = DbProviderFactories.GetFactory(ProviderName);
             dbcon = this.CreateNewConnection();
         }
 
@@ -70,20 +67,36 @@ namespace Common.AdoNet
 
         #region property
 
-        private string provider_name = SQL_PROVIDERNAME;
+        private string provider_name;
         /// <summary>提供程序名称</summary>
         public string ProviderName
         {
-            get { return provider_name; }
+            get { if (string.IsNullOrEmpty(provider_name)) { Reload(); } return provider_name; }
             set { provider_name = value; }
         }
 
-        private string connection_string = String.Empty;
+        private string connection_string;
         /// <summary>数据库连接字符串</summary>
         public string ConnectionString
         {
-            get { return connection_string; }
+            get { if (string.IsNullOrEmpty(connection_string)) { Reload(); } return connection_string; }
             set { connection_string = value; }
+        }
+
+        /// <summary>获取/设置数据库链接配置&提供程序名称</summary>
+        private void Reload()
+        {
+            if (ConfigurationManager.ConnectionStrings[APPSETTING_KEY] != null)
+            {
+                connection_string = ConfigurationManager.ConnectionStrings[APPSETTING_KEY].ConnectionString;
+                provider_name = ConfigurationManager.ConnectionStrings[APPSETTING_KEY].ProviderName;
+            }
+            else if (ConfigurationManager.ConnectionStrings.Count > 0)
+            {
+                connection_string = ConfigurationManager.ConnectionStrings[0].ConnectionString;
+                provider_name = ConfigurationManager.ConnectionStrings[0].ProviderName;
+            }
+            else { throw new Exception("未能在config文件中找到数据库链接配置"); }
         }
 
         private DbConnection dbcon;
@@ -110,7 +123,7 @@ namespace Common.AdoNet
         public DbConnection CreateNewConnection()
         {
             DbConnection con = mfactory.CreateConnection();
-            con.ConnectionString = connection_string;
+            con.ConnectionString = ConnectionString;
             return con;
         }
 
@@ -122,7 +135,7 @@ namespace Common.AdoNet
         /// <returns></returns>
         public void Open()
         {
-            dbcon.ConnectionString = connection_string;
+            dbcon.ConnectionString = ConnectionString;
             //打开连接
             dbcon.Open();
         }
