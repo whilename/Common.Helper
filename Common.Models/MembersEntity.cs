@@ -31,10 +31,28 @@ namespace Mobile.Models
         /// <summary></summary>
         public string District { get; set; }
         /// <summary></summary>
+        public string Privilege { get; set; }
+        /// <summary></summary>
+        public string UnionId { get; set; }
+        /// <summary></summary>
+        public string Language { get; set; }
+        /// <summary></summary>
+        public int Subscribe { get; set; }
+        /// <summary></summary>	
+        public long SubscribeTime { get; set; }
+        /// <summary></summary>
+        public string Remark { get; set; }
+        /// <summary></summary>	
+        public int GroupId { get; set; }
+        /// <summary></summary>
+        public string TagIdList { get; set; }
+
+        /// <summary></summary>
         public DateTime Created { get; set; }
         /// <summary></summary>
         public DateTime Updated { get; set; }
         /// <summary></summary>
         public bool Deleted { get; set; }
+
     }
 }
