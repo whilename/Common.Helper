@@ -12,11 +12,12 @@ using WeChat;
 
 namespace MobileApp
 {
-    // 注意: 有关启用 IIS6 或 IIS7 经典模式的说明，
-    // 请访问 http://go.microsoft.com/?LinkId=9394801
-
+    /// <summary>
+    /// 注意: 有关启用 IIS6 或 IIS7 经典模式的说明，请访问 http://go.microsoft.com/?LinkId=9394801
+    /// </summary>
     public class MvcApplication : System.Web.HttpApplication
     {
+        /// <summary>Application Start</summary>
         protected void Application_Start()
         {
             Log.Register();

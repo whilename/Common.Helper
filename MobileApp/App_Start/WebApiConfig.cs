@@ -5,8 +5,11 @@ using System.Web.Http;
 
 namespace MobileApp
 {
+    /// <summary>Web Api Config</summary>
     public static class WebApiConfig
     {
+        /// <summary>Register config</summary>
+        /// <param name="config"></param>
         public static void Register(HttpConfiguration config)
         {
             config.Routes.MapHttpRoute(

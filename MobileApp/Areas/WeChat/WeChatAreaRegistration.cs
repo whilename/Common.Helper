@@ -6,10 +6,7 @@ namespace MobileApp.Areas.WeChat
     public class WeChatAreaRegistration : AreaRegistration
     {
         /// <summary></summary>
-        public override string AreaName
-        {
-            get { return "WeChat"; }
-        }
+        public override string AreaName { get { return "WeChat"; } }
 
         /// <summary></summary>
         /// <param name="context"></param>

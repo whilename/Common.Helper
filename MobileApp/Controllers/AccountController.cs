@@ -9,30 +9,25 @@ using MobileApp.Models;
 
 namespace MobileApp.Controllers
 {
-
+    /// <summary></summary>
     [Authorize]
     public class AccountController : Controller
     {
-        //
-        // GET: /Account/Index
 
+        /// <summary>GET: /Account/Index</summary>
         public ActionResult Index()
         {
             return View();
         }
-
-        //
-        // GET: /Account/Login
-
+        
+        /// <summary>GET: /Account/Login</summary>
         [AllowAnonymous]
         public ActionResult Login()
         {
             return View();
         }
-
-        //
-        // POST: /Account/Login
-
+        
+        /// <summary>POST: /Account/Login</summary>
         [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -61,29 +56,23 @@ namespace MobileApp.Controllers
             // 如果我们进行到这一步时某个地方出错，则重新显示表单
             return View(model);
         }
-
-        //
-        // GET: /Account/LogOff
-
+        
+        /// <summary>GET: /Account/LogOff</summary>
         public ActionResult LogOff()
         {
             FormsAuthentication.SignOut();
 
             return RedirectToAction("Index", "Home");
         }
-
-        //
-        // GET: /Account/Register
-
+        
+        /// <summary>GET: /Account/Register</summary>
         [AllowAnonymous]
         public ActionResult Register()
         {
             return View();
         }
-
-        //
-        // POST: /Account/Register
-
+        
+        /// <summary>POST: /Account/Register</summary>
         [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -109,18 +98,14 @@ namespace MobileApp.Controllers
             // 如果我们进行到这一步时某个地方出错，则重新显示表单
             return View(model);
         }
-
-        //
-        // GET: /Account/ChangePassword
-
+        
+        /// <summary>GET: /Account/ChangePassword</summary>
         public ActionResult ChangePassword()
         {
             return View();
         }
-
-        //
-        // POST: /Account/ChangePassword
-
+        
+        /// <summary>POST: /Account/ChangePassword</summary>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult ChangePassword(ChangePasswordModel model)
@@ -154,10 +139,8 @@ namespace MobileApp.Controllers
             // 如果我们进行到这一步时某个地方出错，则重新显示表单
             return View(model);
         }
-
-        //
-        // GET: /Account/ChangePasswordSuccess
-
+        
+        /// <summary>GET: /Account/ChangePasswordSuccess</summary>
         public ActionResult ChangePasswordSuccess()
         {
             return View();

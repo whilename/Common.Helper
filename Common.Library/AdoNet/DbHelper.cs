@@ -83,7 +83,7 @@ namespace Common.AdoNet
             set { connection_string = value; }
         }
 
-        /// <summary>获取/设置数据库链接配置&提供程序名称</summary>
+        /// <summary>获取/设置数据库链接配置/提供程序名称</summary>
         private void Reload()
         {
             if (ConfigurationManager.ConnectionStrings[APPSETTING_KEY] != null)

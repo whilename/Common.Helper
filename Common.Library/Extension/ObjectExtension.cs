@@ -1,6 +1,7 @@
 ﻿using Common.Utility;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -145,6 +146,20 @@ namespace Common.Extension
         public static bool IsNull(this object obj)
         {
             return null == obj;
+        }
+
+        /// <summary>获取对象的特性描述</summary>
+        /// <param name="o">对象</param>
+        /// <returns>特性描述字符信息</returns>
+        public static string GetDescription(this object o)
+        {
+            string resultStr = "";
+            if (o == null) return resultStr;
+            Type obj = o.GetType();
+            DescriptionAttribute[] desc = (DescriptionAttribute[])obj.GetField(o.ToString()).GetCustomAttributes(typeof(DescriptionAttribute), false);
+
+            if (desc != null && desc.Length >= 1) { resultStr = desc[0].Description; }
+            return resultStr;
         }
 
     }
