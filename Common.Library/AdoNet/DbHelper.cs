@@ -6,6 +6,7 @@ using Dapper;
 using System.Data.Common;
 using System.Configuration;
 using Newtonsoft.Json;
+using System.Data.SQLite;
 
 namespace Common.AdoNet
 {
@@ -28,7 +29,7 @@ namespace Common.AdoNet
         }
 
         /// <summary>数据库事务对象</summary>
-        public DbTransaction dbtrans;
+        public IDbTransaction dbtrans;
         /// <summary>数据库源实例工厂</summary>
         private DbProviderFactory mfactory;
 
@@ -41,7 +42,8 @@ namespace Common.AdoNet
         {
             connection_string = connectionstring;
             provider_name = providername;
-            mfactory = DbProviderFactories.GetFactory(ProviderName);
+            if (string.IsNullOrEmpty(provider_name)) { Reload(); }
+            mfactory = DbProviderFactories.GetFactory(ProviderName.IndexOf("sqlite", StringComparison.CurrentCultureIgnoreCase) > 0 ? SQL_PROVIDERNAME : ProviderName);
             dbcon = this.CreateNewConnection();
         }
 
@@ -99,13 +101,13 @@ namespace Common.AdoNet
             else { throw new Exception("未能在config文件中找到数据库链接配置"); }
         }
 
-        private DbConnection dbcon;
+        private IDbConnection dbcon;
         /// <summary>当前数据库连接</summary>
-        public DbConnection DBConnection
+        public IDbConnection DBConnection
         {
             get
             {
-                if (dbcon.State == System.Data.ConnectionState.Closed) { this.Open(); }
+                if (dbcon.State == ConnectionState.Closed) { this.Open(); }
                 return dbcon;
             }
         }
@@ -120,9 +122,9 @@ namespace Common.AdoNet
 
         /// <summary>创建新的连接</summary>
         /// <returns></returns>
-        public DbConnection CreateNewConnection()
+        public IDbConnection CreateNewConnection()
         {
-            DbConnection con = mfactory.CreateConnection();
+            IDbConnection con = ProviderName.IndexOf("sqlite", StringComparison.CurrentCultureIgnoreCase) > 0 ? new SQLiteConnection(ConnectionString) : mfactory.CreateConnection();
             con.ConnectionString = ConnectionString;
             return con;
         }
@@ -144,7 +146,7 @@ namespace Common.AdoNet
         /// <returns></returns>
         public void Close()
         {
-            if (dbcon.State == System.Data.ConnectionState.Open) { dbcon.Close(); }
+            if (dbcon.State == ConnectionState.Open) { dbcon.Close(); }
         }
 
         #endregion
@@ -153,10 +155,10 @@ namespace Common.AdoNet
 
         /// <summary>创建执行命令连接</summary>
         /// <returns></returns>
-        private DbCommand CreateCommand()
+        private IDbCommand CreateCommand()
         {
             if (dbcon.State == System.Data.ConnectionState.Closed) { this.Open(); }
-            DbCommand cmd = dbcon.CreateCommand();
+            IDbCommand cmd = dbcon.CreateCommand();
             cmd.CommandTimeout = ComTimeout;
             if (dbtrans != null) { cmd.Transaction = dbtrans; }
             cmd.Parameters.Clear();// 清理执行sql的参数
@@ -216,7 +218,7 @@ namespace Common.AdoNet
         /// <summary>执行sql语句（select），返回OleDbDataReader</summary>
         /// <param name="sql"></param>
         /// <returns></returns>
-        public DbDataReader ExecuteReader(string sql)
+        public IDataReader ExecuteReader(string sql)
         {
             return ExecuteReader(sql, null);
         }
@@ -247,13 +249,13 @@ namespace Common.AdoNet
         /// <param name="sql"></param>
         /// <param name="arrparm"></param>
         /// <returns></returns>
-        public DbDataReader ExecuteReader(string sql, DbParameter[] arrparm)
+        public IDataReader ExecuteReader(string sql, DbParameter[] arrparm)
         {
             bool hasParam = HasParam(arrparm);
             try
             {
                 DBConnection.Open();
-                using (DbCommand cmd = CreateCommand())
+                using (IDbCommand cmd = CreateCommand())
                 {
                     cmd.CommandText = sql;
                     if (hasParam)
@@ -295,7 +297,7 @@ namespace Common.AdoNet
             bool hasParam = HasParam(arrparm);
             try
             {
-                using (DbCommand cmd = CreateCommand())
+                using (IDbCommand cmd = CreateCommand())
                 {
                     cmd.CommandText = sql;
                     if (hasParam)
@@ -337,7 +339,7 @@ namespace Common.AdoNet
             bool hasParam = HasParam(arrparm);
             try
             {
-                using (DbCommand cmd = CreateCommand())
+                using (IDbCommand cmd = CreateCommand())
                 {
                     cmd.CommandText = sql;
                     if (hasParam)
@@ -366,13 +368,13 @@ namespace Common.AdoNet
         /// <param name="procname">存储过程名称</param>
         /// <param name="arrparm">参数</param>
         /// <returns>存储过程执行结果DbDataReader</returns>
-        public DbDataReader ExeDataReaderProcedure(string procname, DbParameter[] arrparm)
+        public IDataReader ExeDataReaderProcedure(string procname, DbParameter[] arrparm)
         {
             bool hasParam = HasParam(arrparm);
             try
             {
                 DBConnection.Open();
-                using (DbCommand cmd = CreateCommand())
+                using (IDbCommand cmd = CreateCommand())
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.CommandText = procname;
@@ -402,7 +404,7 @@ namespace Common.AdoNet
             bool hasParam = HasParam(arrparm);
             try
             {
-                using (DbCommand cmd = CreateCommand())
+                using (IDbCommand cmd = CreateCommand())
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.CommandText = procname;
@@ -433,7 +435,7 @@ namespace Common.AdoNet
             bool hasParam = HasParam(arrparm);
             try
             {
-                using (DbCommand cmd = this.CreateCommand())
+                using (IDbCommand cmd = this.CreateCommand())
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.CommandText = procname;
@@ -445,7 +447,7 @@ namespace Common.AdoNet
                         }
                     }
                     DataSet ds = new DataSet();
-                    DbDataAdapter da = mfactory.CreateDataAdapter();
+                    IDbDataAdapter da = mfactory.CreateDataAdapter();
                     da.SelectCommand = cmd;
                     da.Fill(ds);
                     return ds;
@@ -480,7 +482,7 @@ namespace Common.AdoNet
             bool hasParam = HasParam(arrparm);
             try
             {
-                using (DbCommand cmd = this.CreateCommand())
+                using (IDbCommand cmd = this.CreateCommand())
                 {
                     cmd.CommandText = sql;
                     if (hasParam)
@@ -491,7 +493,7 @@ namespace Common.AdoNet
                         }
                     }
                     DataSet ds = new DataSet();
-                    DbDataAdapter da = mfactory.CreateDataAdapter();
+                    IDbDataAdapter da = mfactory.CreateDataAdapter();
                     da.SelectCommand = cmd;
                     da.Fill(ds);
                     return ds;

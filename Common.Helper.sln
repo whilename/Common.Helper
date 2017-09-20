@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Library", "Common.Library\Common.Library.csproj", "{15C4790D-4939-4C8F-8050-EAB573C4B0B1}"
 EndProject
@@ -17,6 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dll.Reference", "dll.Refere
 		dll.Reference\ServiceStack.Interfaces.dll = dll.Reference\ServiceStack.Interfaces.dll
 		dll.Reference\ServiceStack.Redis.dll = dll.Reference\ServiceStack.Redis.dll
 		dll.Reference\ServiceStack.Text.dll = dll.Reference\ServiceStack.Text.dll
+		dll.Reference\System.Data.SQLite.dll = dll.Reference\System.Data.SQLite.dll
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{EC217F23-B2BA-4D54-A077-B5F4798EFFE6}"
@@ -100,5 +101,8 @@ Global
 		{5B6606F7-DABA-4395-A508-527FCEF9A320} = {51482C90-6508-4752-BA77-D6741CAEC87E}
 		{656ED40A-3ADC-444C-8521-E6DD79CCE5EC} = {51482C90-6508-4752-BA77-D6741CAEC87E}
 		{56A49B3D-E48F-4E26-A586-B765124C793D} = {51482C90-6508-4752-BA77-D6741CAEC87E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {845D3C64-5CE0-4D43-9FC4-B6789981E12F}
 	EndGlobalSection
 EndGlobal

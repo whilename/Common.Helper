@@ -21,6 +21,8 @@ namespace MobileApp
         protected void Application_Start()
         {
             Log.Register();
+            SQLiteDbConfig.Register();
+
             WXConfig.Register();
             // 移除所有视图引擎
             ViewEngines.Engines.Clear();

@@ -70,7 +70,7 @@ namespace Common.AdoNet
         #region Transaction处理
 
         /// <summary>Begin DbTransaction</summary>
-        public DbTransaction TrnStart() { db_helper.TrnStart(); return db_helper.dbtrans; }
+        public IDbTransaction TrnStart() { db_helper.TrnStart(); return db_helper.dbtrans; }
 
         /// <summary>Commit DbTransaction</summary>
         public void TrnCommit() { db_helper.TrnCommit(); }
