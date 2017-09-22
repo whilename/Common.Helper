@@ -7,7 +7,7 @@ using System.Text;
 namespace WeChat.Models
 {
     /// <summary>预支付交易单应答结果</summary>
-    public class WXPayUnifiedorderResponse : WXBaseModel
+    public class WXPayUnifiedorderResponse : WXPayBase
     {
         /// <summary></summary>
         public WXPayUnifiedorderResponse() { properties = new Hashtable(); }

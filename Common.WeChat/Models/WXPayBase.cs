@@ -10,7 +10,7 @@ using WeChat;
 namespace WeChat.Models
 {
     /// <summary>基类模型</summary>
-    public class WXBaseModel
+    public class WXPayBase
     {
         /// <summary>属性集合</summary>
         protected Hashtable properties;

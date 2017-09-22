@@ -44,7 +44,9 @@
   <ItemGroup>
     <Compile Include="Models\WXErrorMsg.cs" />
     <Compile Include="Models\WXAccessToken.cs" />
-    <Compile Include="Models\WXBaseModel.cs" />
+    <Compile Include="Models\WXEventReplyMsg.cs" />
+    <Compile Include="Models\WXPayBase.cs" />
+    <Compile Include="Models\WXEventMsg.cs" />
     <Compile Include="Models\WXJSConfig.cs" />
     <Compile Include="Models\WXMenus.cs" />
     <Compile Include="Models\WXMsgTemplate.cs" />

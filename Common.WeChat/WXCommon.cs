@@ -171,9 +171,9 @@ namespace WeChat
 
         /// <summary>微信模板消息</summary>
         /// <param name="template">消息对象信息</param>
-        public static WXErrorMsg SendMsg(WXMsgTemplate template)
+        public static WXErrorMsg SendTemplateMsg(WXMsgTemplate template)
         {
-            string send_msg_url = "{0}/cgi-bin/message/template/send?access_token={1}".StrFormat(
+            string send_msg_url = string.Format("{0}/cgi-bin/message/template/send?access_token={1}",
                 WXConfig.API_URL, AccessToken.access_token);
             string param = Utils.JsonSerialize(template);
             // 发送模板消息
@@ -183,6 +183,116 @@ namespace WeChat
             return result;
         }
 
+        /// <summary>微信客服消息</summary>
+        /// <param name="msg">消息对象信息</param>
+        public static WXErrorMsg SendCustomMsg(WXMsgCustom msg)
+        {
+            string send_msg_url = string.Format("{0}/cgi-bin/message/custom/send?access_token={1}",
+                WXConfig.API_URL, AccessToken.access_token);
+            string param = Utils.JsonSerialize(msg);
+            // 发送模板消息
+            WXErrorMsg result = WebHttp.SendPost<WXErrorMsg>(send_msg_url, param);
+            Log.Info("Send WeChat Custom Msg:{0} \n Params:{1} \n Response：{2}",
+                send_msg_url, param, Utils.JsonSerialize(result));
+            return result;
+        }
+
+        #endregion
+
+        #region Event Message Logic
+        /*
+        /// <summary>Get</summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public HttpResponseMessage Get(string id) { return new HttpResponseMessage(); }
+
+        /// <summary>Post</summary>
+        /// <param name="dto">消息数据对象</param>
+        /// <returns></returns>
+        public HttpResponseMessage Post([FromBody]WXEventMsg dto)
+        {
+            string content = "success";
+            switch (dto.MsgType)
+            {
+                case "event":
+                    content = EventMsg(dto);
+                    break;
+                case "text":
+
+                    break;
+                case "image":
+
+                    break;
+                case "voice":
+
+                    break;
+                case "video":
+                case "shortvideo":
+
+                    break;
+                case "location":
+
+                    break;
+                case "link":
+
+                    break;
+                default: break;
+            }
+            HttpResponseMessage result = new HttpResponseMessage { Content = new StringContent(content, Encoding.UTF8, "application/xml") };
+            return result;
+        }
+
+        /// <summary>事件消息处理</summary>
+        /// <param name="msg"></param>
+        /// <returns></returns>
+        private string EventMsg(WXEventMsg msg)
+        {
+            string result = "success";
+            switch (msg.Event)
+            {
+                case "subscribe":
+                    result = SubscribeMsg(msg.FromUserName, msg.ToUserName);
+                    break;
+                case "unsubscribe": break;
+                case "SCAN":
+
+                    break;
+                case "LOCATION":
+
+                    break;
+                case "CLICK":
+
+                    break;
+                case "VIEW":
+
+                    break;
+                default: break;
+            }
+            return result;
+        }
+
+        /// <summary>用户在关注公众号时响应消息</summary>
+        /// <param name="ToUserName">接收方帐号（收到的OpenID）</param>
+        /// <param name="FromUserName">开发者微信号</param>
+        /// <returns></returns>
+        private string SubscribeMsg(string ToUserName, string FromUserName)
+        {
+            WXEventReplyMsg msg = new WXEventReplyMsg();
+            msg.ToUserName = ToUserName;
+            msg.FromUserName = FromUserName;
+            msg.CreateTime = DateTime.Now.ToTimeStamp();
+            msg.MsgType = "news";
+            msg.Articles = new List<MsgItem>();
+            msg.Articles.Add(new MsgItem
+            {
+                Title = "Welcome to Thermo Fisher China",
+                Description = "Find details and Purchase",
+                PicUrl = "http://wx.thermofisher.com/iThermo/api/static/welcome.png",
+                Url = "http://runningcloud.h5release.com/h5/95fb4234-88f9-6c8f-1321-f02528e70cdb.html"
+            });
+            return msg.ToXmlSerialize();
+        }
+        */
         #endregion
 
     }
