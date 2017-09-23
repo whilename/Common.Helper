@@ -26,6 +26,8 @@ namespace Common.Utility
         /// <summary>注册应用程序系统日志记录</summary>
         public static void Register()
         {
+            // log4net配置文件自定义变量设置
+            //log4net.GlobalContext.Properties["sitename"] = System.Web.Hosting.HostingEnvironment.SiteName;
             // 解注以下两行代码自动识别C/S或B/S程序加载log4net所在目录配置文件
             //string config_file = System.AppDomain.CurrentDomain.SetupInformation.ApplicationName.Contains(".exe") ? "log4net.config" : "bin\\log4net.config";
             //log4net.Config.XmlConfigurator.ConfigureAndWatch(new System.IO.FileInfo(AppDomain.CurrentDomain.BaseDirectory + config_file));
