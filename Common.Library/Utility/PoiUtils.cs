@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using NPOI.SS.Util;
+using System.IO;
 
 namespace Common.Utility
 {
@@ -74,10 +75,9 @@ namespace Common.Utility
             return new PoiUtils(source.Workbook, sheet);
         }
 
-        public void Write()
-        {
-
-        }
+        /// <summary>写入到指定的流中</summary>
+        /// <param name="stream"></param>
+        public void Write(Stream stream) { this._workbook.Write(stream); }
         
         /// <summary>创建 用于自定义样式</summary>
         /// <returns></returns>
