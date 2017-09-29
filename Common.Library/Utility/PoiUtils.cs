@@ -44,16 +44,12 @@ namespace Common.Utility
             set { _currentcol = value; }
         }
         private HSSFFormulaEvaluator _evaluator;
-
-        /// <summary>列数</summary>
-        public int ColsCount { get; set; }
-
+        
         /// <summary>NPOI帮助类</summary>
-        public PoiUtils(HSSFWorkbook workbook, ISheet sheet, int colsCount)
+        public PoiUtils(HSSFWorkbook workbook = null, ISheet sheet = null)
         {
-            _workbook = workbook;
-            _sheet = sheet;
-            ColsCount = colsCount;
+            _workbook = workbook?? new HSSFWorkbook();
+            _sheet = sheet?? workbook.CreateSheet("Sheet1");
         }
 
         /// <summary>设置sheet的名称</summary>
@@ -75,7 +71,12 @@ namespace Common.Utility
         {
             ISheet sheet = source.Workbook.CloneSheet(source.Workbook.GetSheetIndex(source.WorkSheet));
             source.Workbook.SetSheetName(source.Workbook.GetSheetIndex(sheet), sheetName);
-            return new PoiUtils(source.Workbook, sheet, source.ColsCount);
+            return new PoiUtils(source.Workbook, sheet);
+        }
+
+        public void Write()
+        {
+
         }
         
         /// <summary>创建 用于自定义样式</summary>
@@ -188,10 +189,6 @@ namespace Common.Utility
             CurrentRow = row;
             CurrentCol = col;
             IRow rowObj = _sheet.GetRow(row - 1);
-            if (col > ColsCount)
-            {
-                ColsCount = col;
-            }
             if (rowObj == null)
             {
                 CreateRow(row);
@@ -413,7 +410,7 @@ namespace Common.Utility
             _sheet.ShiftRows(CurrentRow - 1, _sheet.LastRowNum, 1);
             IRow row = _sheet.GetRow(CurrentRow - 1);
 
-            for (int i = 0; i < ColsCount; i++)
+            for (int i = 0; i < row.LastCellNum; i++)
             {
                 row.CreateCell(i);
             }
@@ -439,7 +436,7 @@ namespace Common.Utility
             IRow hssfRow = CreateRow(row);
             CurrentRow = row;
             IRow hssfSourceRow = _sheet.GetRow(copyRowStyleFrom - 1);
-            for (int i = 0; i < ColsCount; i++)
+            for (int i = 0; i < hssfSourceRow.LastCellNum; i++)
             {
                 hssfRow.GetCell(i).CellStyle = hssfSourceRow.GetCell(i).CellStyle;
             }
@@ -454,7 +451,7 @@ namespace Common.Utility
         {
             IRow hssfRow = _sheet.CreateRow(row - 1);
             CurrentRow = row;
-            for (int i = 0; i < ColsCount; i++)
+            for (int i = 0; i < hssfRow.LastCellNum; i++)
             {
                 hssfRow.CreateCell(i);
                 if (cellstyle != null)

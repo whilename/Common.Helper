@@ -35,7 +35,7 @@ namespace WinFormsApp
                 //克隆一个sheet做编辑操作
                 //this._sheet = this.workbook.CloneSheet(index);
                 this._sheet = this.workbook.GetSheetAt(index);
-                this._poi = new PoiUtils(this.workbook, this._sheet, 100);
+                this._poi = new PoiUtils(this.workbook, this._sheet);
                 //移除原sheet
                 //this.workbook.RemoveSheetAt(index);
                 this.workbook.GetSheetAt(index).ForceFormulaRecalculation = true;
@@ -64,7 +64,7 @@ namespace WinFormsApp
 
             this.workbook = new HSSFWorkbook();
             this._sheet = this.workbook.CreateSheet("Sheet1");
-            this._poi = new PoiUtils(this.workbook, this._sheet, 100);
+            this._poi = new PoiUtils(this.workbook, this._sheet);
             this.workbook.GetSheetAt(this.workbook.GetSheetIndex("Sheet1")).ForceFormulaRecalculation = true;
 
             for (int i = 1; i <= 20; i++)
