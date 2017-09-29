@@ -50,7 +50,7 @@ namespace Common.Utility
         public PoiUtils(HSSFWorkbook workbook = null, ISheet sheet = null)
         {
             _workbook = workbook?? new HSSFWorkbook();
-            _sheet = sheet?? workbook.CreateSheet("Sheet1");
+            _sheet = sheet?? _workbook.CreateSheet("Sheet1");
         }
 
         /// <summary>设置sheet的名称</summary>
@@ -75,10 +75,20 @@ namespace Common.Utility
             return new PoiUtils(source.Workbook, sheet);
         }
 
-        /// <summary>写入到指定的流中</summary>
-        /// <param name="stream"></param>
-        public void Write(Stream stream) { this._workbook.Write(stream); }
-        
+        /// <summary>获取当前操作workbook数据流</summary>
+        /// <returns>数据字节流</returns>
+        public byte[] GetBuffer()
+        {
+            byte[] bits;
+            using (MemoryStream stream = new MemoryStream())
+            {
+                this._workbook.Write(stream);
+                bits = stream.GetBuffer();
+                stream.Close();
+            }
+            return bits;
+        }
+
         /// <summary>创建 用于自定义样式</summary>
         /// <returns></returns>
         public IDataFormat CreateDataFormat() { return _workbook.CreateDataFormat(); }
@@ -241,7 +251,6 @@ namespace Common.Utility
             }
             else
             {
-                //cell.SetCellValue(Utils.NvStr(value));
                 cell.SetCellValue(Convert.ToString(value));
             }
         }

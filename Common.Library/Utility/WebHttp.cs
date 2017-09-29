@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Common.Utility
 {
@@ -217,6 +218,27 @@ namespace Common.Utility
                 return result;
             }
             catch (Exception ex) { Log.Error(ex); return string.Empty; }
+        }
+
+        /// <summary>响应输出文件流下载</summary>
+        /// <param name="Response">Http响应信息对象</param>
+        /// <param name="bits">数据字节流</param>
+        /// <param name="filename">文件名称</param>
+        /// <param name="charset">定义输出字符集</param>
+        public static void WriteFile(HttpResponseBase Response, byte[] bits, string filename, string charset = "utf-8")
+        {
+            // 清除所有缓存区的内容
+            Response.Clear();
+            Response.Charset = charset;
+            // 输出内容的编码为默认编码
+            Response.ContentEncoding = Encoding.GetEncoding(charset);
+            // 添加头信息。为“文件下载/另存为”指定默认文件名称
+            Response.AddHeader("Content-Disposition", "attachment;filename=" + filename);
+            // 添加头文件，指定文件的大小，让浏览器显示文件下载的速度
+            Response.AddHeader("Content-Length", bits.Length.ToString());
+            // 把文件流发送到客户端
+            Response.BinaryWrite(bits);
+            Response.End();
         }
 
         #endregion
