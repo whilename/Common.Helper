@@ -295,11 +295,11 @@ namespace Common.Utility
 
         /// <summary>将指定对象转换成url参数字符串</summary>
         /// <param name="obj">需要转换的对象</param>
+        /// <param name="fromat">拼接格式，配合keyvalue使用，默认字段名加值,Fromat("{0}{1}",fieldname,value)</param>
         /// <param name="trimEmpty">是否去除空值属性字段，默认true去除，false不去除</param>
         /// <param name="keyValue">是否字段名加性值，默认true，false单值</param>
-        /// <param name="fromat">拼接格式，配合keyvalue使用，默认字段名加值,Fromat("{0}{1}",fieldname,value)</param>
         /// <returns></returns>
-        public static string ObjectJoinString(object obj, bool trimEmpty = true, bool keyValue = true, string fromat = "{0}{1}")
+        public static string ObjectJoinString(object obj, string fromat = "{0}{1}", bool trimEmpty = true, bool keyValue = true)
         {
             StringBuilder url_str = new StringBuilder();
             // 按键排序的键/值对集合
