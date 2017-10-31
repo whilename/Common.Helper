@@ -19,7 +19,7 @@ namespace MobileApp.Areas.WeChat.Controllers
         {
             string state = Request.QueryString["state"];
             string login_url = Request.Url.AbsoluteUri + "/Login";
-            return Redirect(WXCommon.Oauth2Authorize(login_url, state, false)); ;
+            return Redirect(WXCommon.Instance.Oauth2Authorize(login_url, state, false)); ;
         }
 
         /// <summary></summary>
@@ -28,10 +28,10 @@ namespace MobileApp.Areas.WeChat.Controllers
             string code = Request.QueryString["code"];
             string state = Request.QueryString["state"];
             // 获取微信授权信息
-            WXAccessToken access_token = WXCommon.GetAccessToken(code);
+            WXAccessToken access_token = WXCommon.Instance.GetAccessToken(code);
             if (access_token.scope.Equals("snsapi_userinfo", StringComparison.CurrentCultureIgnoreCase))
             {
-                WXUserInfo wxuser = WXCommon.GetUserInfo(access_token);
+                WXUserInfo wxuser = WXCommon.Instance.GetUserInfo(access_token);
                 UsersEntity user = new UsersEntity();
                 MembersEntity member = new MembersEntity();
                 UsersBusiness ubll = new UsersBusiness();

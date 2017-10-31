@@ -23,10 +23,10 @@ namespace Common.Utility
         /// <typeparam name="T">参数类型</typeparam>
         /// <param name="url">地址</param>
         /// <param name="param">参数</param>
+        /// <param name="contenttype">参数</param>
         /// <returns>本次请求的响应结果</returns>
-        public static T SendPost<T>(string url, string param)
+        public static T SendPost<T>(string url, string param, string contenttype = "application/json")
         {
-            string contenttype = "application/json";
             var result = SendHttpRequeset(url, param, "post", "utf-8", 0, contenttype);
             return (T)DeserializeObject<T>(result);
         }

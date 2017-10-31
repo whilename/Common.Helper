@@ -49,7 +49,7 @@ namespace Common.Utility
         private bool is_xlsx = false;
 
         /// <summary>NPOI加载Excel</summary>
-        /// <param name="stream"></param>
+        /// <param name="filepath"></param>
         public PoiUtils(string filepath)
         {
             FileInfo fi = new FileInfo(filepath);

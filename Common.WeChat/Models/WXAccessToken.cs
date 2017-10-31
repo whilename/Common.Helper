@@ -8,6 +8,10 @@ namespace WeChat.Models
     /// <summary>微信访问权限信息</summary>
     public class WXAccessToken
     {
+        /// <summary>错误消息码</summary>
+        public string errcode { get; set; }
+        /// <summary>错误消息提示</summary>
+        public string errmsg { get; set; }
         /// <summary>网页授权接口调用凭证,注意：Authorize授权时此access_token与基础支持的access_token不同</summary>
         public string access_token { get; set; }
         /// <summary>access_token接口调用凭证超时时间，单位（秒）</summary>

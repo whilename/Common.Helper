@@ -55,8 +55,8 @@
     <Compile Include="Models\WXTicket.cs" />
     <Compile Include="Models\WXUserInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="BaseCommon.cs" />
     <Compile Include="WXCommon.cs" />
-    <Compile Include="WXConfig.cs" />
     <Compile Include="WXPayment.cs" />
   </ItemGroup>
   <ItemGroup>

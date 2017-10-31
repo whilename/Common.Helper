@@ -23,6 +23,8 @@ namespace WeChat.Models
         public string device_info { get { return GetVal("device_info"); } set { SetVal("device_info", value); } }
         /// <summary>随机字符串,随机字符串，长度要求在32位以内</summary>
         public string nonce_str { get { return GetVal("nonce_str"); } set { SetVal("nonce_str", value); } }
+
+        public string key { get; set; }
         /// <summary>签名,通过签名算法计算得出的签名值</summary>
         public string sign
         {
@@ -38,7 +40,7 @@ namespace WeChat.Models
                     if (v == null || string.IsNullOrEmpty(v.ToString()) || k.Equals("sign")) continue;
                     sbstr.AppendFormat("{0}={1}&", k, v);
                 }
-                sbstr.AppendFormat("key={0}", WXConfig.KEY);
+                sbstr.AppendFormat("key={0}", key);
                 properties["sign"] = Utils.MD5Hash(sbstr.ToString()).ToUpper();
                 return properties["sign"].ToString();
             }
