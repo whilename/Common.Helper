@@ -19,7 +19,7 @@ namespace MobileApp
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "auth", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
                 //,namespaces: new string[] { "MobileApp.Areas.WeChat.Controllers" }
             //).DataTokens.Add("area", "WeChat");
             );
