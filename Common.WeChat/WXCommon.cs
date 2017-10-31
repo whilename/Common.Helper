@@ -62,6 +62,7 @@ namespace WeChat
 
     }
 
+    /// <summary>企业号</summary>
     public class CorpCommon : BaseWechat
     {
         private static readonly object padlock = new object();

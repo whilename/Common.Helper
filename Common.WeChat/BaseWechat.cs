@@ -65,11 +65,11 @@ namespace WeChat
         }
 
         /// <summary>初始化</summary>
-        /// <param name="appid"></param>
-        /// <param name="mchid"></param>
-        /// <param name="key"></param>
-        /// <param name="secret"></param>
-        /// <param name="agentid"></param>
+        /// <param name="appid">微信的公众号APPID/企业ID</param>
+        /// <param name="mchid">商户号</param>
+        /// <param name="key">支付密钥</param>
+        /// <param name="secret">微信的公众号密钥/企业密钥</param>
+        /// <param name="agentid">企业应用的id</param>
         protected void Initialize(string appid, string mchid, string key, string secret, string agentid)
         {
             AppIdCorpId = appid;
