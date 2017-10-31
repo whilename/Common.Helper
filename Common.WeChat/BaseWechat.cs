@@ -11,7 +11,7 @@ using WeChat.Models;
 namespace WeChat
 {
     /// <summary>微信公众号帮助类</summary>
-    public class BaseCommon
+    public class BaseWechat
     {
         // 是否首次缓存
         protected static bool IsFirstTime = true;
@@ -36,12 +36,12 @@ namespace WeChat
         /// <summary>企业应用的id</summary>
         protected string AgentId { get; set; }
         /// <summary>缓存Token</summary>
-        public static WXAccessToken AccessToken { get; private set; }
+        public WXAccessToken AccessToken { get; private set; }
         /// <summary>缓存Ticket</summary>
-        public static WXTicket JsApiTicket { get; private set; }
+        public WXTicket JsApiTicket { get; private set; }
 
         /// <summary>缓存微信鉴权信息</summary>
-        public void Start()
+        protected void Start()
         {
             AccessToken = GetAccessToken();// 缓存AccessToken信息
             JsApiTicket = GetJSApiTicket();// 缓存JsApiTicket信息
@@ -62,6 +62,21 @@ namespace WeChat
                     finally { Thread.Sleep(7100000); }// 为避免CPU空转，在队列为空时休息
                 }
             });
+        }
+
+        /// <summary>初始化</summary>
+        /// <param name="appid"></param>
+        /// <param name="mchid"></param>
+        /// <param name="key"></param>
+        /// <param name="secret"></param>
+        /// <param name="agentid"></param>
+        protected void Initialize(string appid, string mchid, string key, string secret, string agentid)
+        {
+            AppIdCorpId = appid;
+            MCHID = mchid;
+            KEY = key;
+            CorpSecret = secret;
+            AgentId = agentid;
         }
 
         #region Access Token

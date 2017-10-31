@@ -8,7 +8,7 @@ using Common.Utility;
 namespace WeChat
 {
     /// <summary>微信支付</summary>
-    public class WXPayment : BaseCommon
+    public class WXPayment : BaseWechat
     {
         /// <summary>预支付交易订单请求</summary>
         /// <param name="model"></param>

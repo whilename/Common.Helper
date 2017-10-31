@@ -11,10 +11,10 @@ using System.Threading;
 namespace WeChat
 {
     /// <summary>微信公共处理类</summary>
-    public class WXCommon : BaseCommon
+    public class WXCommon : BaseWechat
     {
         /// <summary></summary>
-        public static WXCommon Instance { get; private set; }
+        private static readonly object padlock = new object();
 
         /// <summary></summary>
         private WXCommon()
@@ -23,41 +23,68 @@ namespace WeChat
             switch (e)
             {
                 case "dev":
-                    Initialize("wx165579c7fca21c14", "", "", "dcd8424687ebdf63e116aca973ddc645", "1000003");
+                    Initialize("wx165579c7fca21c14", "", "", "dcd8424687ebdf63e116aca973ddc645", "");
                     break;
                 case "test":
-                    Initialize("wx35342ac41e22b328", "", "", "d4624c36b6795d1d99dcf0547af5443d", "1000003");
+                    Initialize("wx35342ac41e22b328", "", "", "d4624c36b6795d1d99dcf0547af5443d", "");
                     break;
                 case "pro":
                     Initialize("", "", "", "", "");
                     break;
                 default:
-                    Initialize("wx35342ac41e22b328", "", "", "d4624c36b6795d1d99dcf0547af5443d", "1000003");
+                    Initialize("wx35342ac41e22b328", "", "", "d4624c36b6795d1d99dcf0547af5443d", "");
                     break;
             }
         }
+
+        private static WXCommon instance = null;
+        /// <summary>获取缓存对象实例</summary>
+        public static WXCommon Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    // 线程单列模式
+                    lock (padlock)
+                    {
+                        if (instance == null)
+                        {
+                            instance = new WXCommon();
+                            // 启动缓存微信鉴权信息，7000秒刷新一次
+                            instance.Start();
+                        }
+                    }
+                }
+                return instance;
+            }
+        }
+
+    }
+
+    public class CorpCommon : BaseWechat
+    {
+        private static readonly object padlock = new object();
+
         /// <summary></summary>
-        static WXCommon()
+        private CorpCommon()
         {
-            Instance = new WXCommon();
-            // 启动缓存微信鉴权信息，7000秒刷新一次
-            Instance.Start();
+            Initialize("ww2906385266c2cc7c", "", "", "cp7yHx5XX0n1gBBvNmV3xUZ0C76k91QFeyoZ9CeDePY", "1000003");
         }
 
-        /// <summary>初始化</summary>
-        /// <param name="appid"></param>
-        /// <param name="mchid"></param>
-        /// <param name="key"></param>
-        /// <param name="secret"></param>
-        /// <param name="agentid"></param>
-        private void Initialize(string appid, string mchid, string key, string secret,string agentid)
+        private static CorpCommon instance = null;
+        /// <summary>获取缓存对象实例</summary>
+        public static CorpCommon Instance
         {
-            AppIdCorpId = appid;
-            MCHID = mchid;
-            KEY = key;
-            CorpSecret = secret;
-            AgentId = agentid;
+            get
+            {
+                if (instance == null)
+                {
+                    // 线程单列模式
+                    lock (padlock) { if (instance == null) { instance = new CorpCommon(); instance.Start(); } }
+                }
+                return instance;
+            }
         }
-
     }
 }
