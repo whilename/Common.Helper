@@ -9,6 +9,7 @@
         @Styles.Render("~/Content/mobileCss", "~/Content/css")
         @*@Scripts.Render("~/bundles/modernizr")*@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        @RenderSection("headscripts",required:false)
     </head>
 <body>
         <div data-role="page" data-theme="b">
