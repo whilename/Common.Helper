@@ -45,12 +45,16 @@ namespace WeChat.Models
     /// <summary>企业号成员信息</summary>
     public class WXMemberInfo
     {
+        /// <summary>错误代码</summary>
+        public string errcode { get; set; }
+        /// <summary>错误消息</summary>
+        public string errmsg { get; set; }
         /// <summary>成员UserID</summary>
         public string userid { get; set; }
         /// <summary>成员姓名</summary>
         public string name { get; set; }
         /// <summary>成员所属部门</summary>
-        public string department { get; set; }
+        public int[] department { get; set; }
         /// <summary>职位信息</summary>
         public string position { get; set; }
         /// <summary>成员手机号，仅在用户同意snsapi_privateinfo授权时返回</summary>
