@@ -1,31 +1,33 @@
-﻿@{
+﻿@model WeChat.Models.WXMemberInfo
+
+@{
     ViewBag.Title = "Home Page";
 }
 @section headscripts{
     <!--该链接可在智齿客服工作台=>设置=>接入渠道中找到-->
     <script src="https://www.sobot.com/chat/frame/js/entrance.js?sysNum=4d84d76a43a14a8fab3463add57f4eb4" class="zhiCustomBtn" id="zhichiScript" data-args="属性名1=属性值1&属性名2=属性值2"></script>
+    <script>
+        //设置用户信息
+        zhiManager.set('userinfo', {
+            partnerId: '@Model.userid',   //用户对接ID，必填，用户唯一标示，通常是企业自有用户系统中的userId
+            tel: '@Model.mobile',   //电话或手机
+            email: '@Model.email',   //邮箱
+            uname: '@Model.name',   //昵称
+            visitTitle: 'ssss',   //对话页标题，若不传入系统将获取用户打开咨询组件时所在页面的标题
+            visitUrl: '',   //对话页URL，若不传入系统将获取用户打开咨询组件时所在页面的URL
+            face: '@Model.avatar',   //头像URL
+            realname: '@Model.name',   //真实姓名
+            weibo: '',   //微博账号
+            weixin: '',   //微信账号
+            qq: '',   //QQ号
+            sex: '@Model.gender', //0 女 1 男
+            birthday: '',   //生日，如“1990-01-01”
+            remark: '',   //用户的备注信息
+            params: '{"等级":"VIP用户","客户状态":"意向客户"}'   //自定义用户信息字段
+        });
+    </script>
 }
 
-<script>
-    //设置用户信息
-    zhiManager.set('userinfo', {
-        partnerId: '@Model.userid',   //用户对接ID，必填，用户唯一标示，通常是企业自有用户系统中的userId
-        tel: '@Model.mobile',   //电话或手机
-        email: '@Model.email',   //邮箱
-        uname: '@Model.name',   //昵称
-        visitTitle: 'ssss',   //对话页标题，若不传入系统将获取用户打开咨询组件时所在页面的标题
-        visitUrl: '',   //对话页URL，若不传入系统将获取用户打开咨询组件时所在页面的URL
-        face: '@Model.avatar',   //头像URL
-        realname: '@Model.name',   //真实姓名
-        weibo: '',   //微博账号
-        weixin: '',   //微信账号
-        qq: '',   //QQ号
-        sex: '@Model.gender', //0 女 1 男
-        birthday: '',   //生日，如“1990-01-01”
-        remark: '',   //用户的备注信息
-        params: '{"等级":"VIP用户","客户状态":"意向客户"}'   //自定义用户信息字段
-    });
-</script>
 <h2>@ViewBag.Message</h2>
 <p>
     To learn more about ASP.NET MVC visit <a href="http://asp.net/mvc" title="ASP.NET MVC Website">http://asp.net/mvc</a>.
