@@ -15,5 +15,8 @@ namespace WeChat.Models
         /// <summary>消息编号</summary>
         public string msgid { get; set; }
 
+        /// <summary>成员列表</summary>
+        public string userlist { get; set; }
+
     }
 }

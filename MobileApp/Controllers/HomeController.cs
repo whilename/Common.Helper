@@ -28,8 +28,9 @@ namespace MobileApp.Controllers
         public ActionResult Index(string code, string state = "")
         {
             //ViewBag.Message = "Modify this template to jump-start your ASP.NET MVC application.";
-            MemberTicket ticket = CorpCommon.Instance.GetMemberTicket(code);
-            WXMemberInfo member = CorpCommon.Instance.GetMemberInfo(ticket.user_ticket);
+            CorpMemberTicket ticket = CorpCommon.Instance.GetMemberTicket(code);
+            CorpMemberInfo member = CorpCommon.Instance.GetMemberInfo(ticket.user_ticket);
+            //var errmsg = CorpCommon.Instance.DeleteMember("ouyang");
 
             return View(member);
         }

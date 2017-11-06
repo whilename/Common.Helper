@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Library", "Common.Library\Common.Library.csproj", "{15C4790D-4939-4C8F-8050-EAB573C4B0B1}"
 EndProject
@@ -12,7 +12,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dll.Reference", "dll.Reference", "{F1A519F3-3D2F-4730-84DC-DAA605D1BD2D}"
 	ProjectSection(SolutionItems) = preProject
 		dll.Reference\log4net.dll = dll.Reference\log4net.dll
-		dll.Reference\NPOI.dll = dll.Reference\NPOI.dll
 		dll.Reference\ServiceStack.Common.dll = dll.Reference\ServiceStack.Common.dll
 		dll.Reference\ServiceStack.Interfaces.dll = dll.Reference\ServiceStack.Interfaces.dll
 		dll.Reference\ServiceStack.Redis.dll = dll.Reference\ServiceStack.Redis.dll
