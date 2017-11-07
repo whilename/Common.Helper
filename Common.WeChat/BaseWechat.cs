@@ -46,7 +46,8 @@ namespace WeChat
         public WXAccessToken AccessToken { get; private set; }
         /// <summary>缓存Ticket</summary>
         public WXTicket JsApiTicket { get; private set; }
-
+        /// <summary>是否企业应用，根据AgentId是否空识别</summary>
+        protected bool IsCorp { get { return string.IsNullOrEmpty(AgentId);} }
         #endregion
 
         /// <summary>缓存微信鉴权信息</summary>
@@ -94,14 +95,13 @@ namespace WeChat
         /// <returns></returns>
         private WXAccessToken GetAccessToken()
         {
-            bool iscorp = string.IsNullOrEmpty(AgentId);
             // 微信授权信息请求地址及参数
-            string access_token_url = iscorp ?
+            string access_token_url = IsCorp ?
                 "{0}/token?grant_type=client_credential&appid={1}&secret={2}" :
                 "{0}/gettoken?corpid={1}&corpsecret={2}";
             // GET请求微信授权，回传AccessToken信息
             WXAccessToken access_token = WebHttp.SendGet<WXAccessToken>(
-                access_token_url.StrFormat(iscorp ? API_URL_A : CORP_URL_A, AppIdCorpId, CorpSecret));
+                access_token_url.StrFormat(IsCorp ? API_URL_A : CORP_URL_A, AppIdCorpId, CorpSecret));
             // 记录请求与回传信息
             Log.Info("Get WeChat AccessToken：{0} \n Response：{1}", access_token_url, Utils.JsonSerialize(access_token));
             return access_token;
@@ -129,7 +129,7 @@ namespace WeChat
         /// <returns></returns>
         private WXTicket GetJSApiTicket()
         {
-            string getticket_url = string.IsNullOrEmpty(AgentId) ?
+            string getticket_url = IsCorp ?
                 "{0}/ticket/getticket?access_token={1}&type=jsapi".StrFormat(API_URL_A, AccessToken.access_token) :
                 "{0}/get_jsapi_ticket?access_token={1}".StrFormat(CORP_URL_A, AccessToken.access_token);
             // GET请求微信接口，回传JS-SDK权限信息
@@ -214,8 +214,10 @@ namespace WeChat
         /// <param name="mus">菜单</param>
         public WXErrorMsg MenuCreate(WXMenus mus)
         {
-            string menu_manager_url = "{0}/menu/create?access_token={1}".StrFormat(
-                API_URL_A, AccessToken.access_token);
+            string menu_manager_url = "{0}/menu/create?access_token={1}"
+                .StrFormat(IsCorp ? API_URL_A : CORP_URL_A, AccessToken.access_token);
+            // 是否企业应用
+            if (!IsCorp) { menu_manager_url += "&agentid=" + AgentId; }
             string param = Utils.JsonSerialize(mus);
             // 创建自定义菜单
             WXErrorMsg result = WebHttp.SendPost<WXErrorMsg>(menu_manager_url, param);
@@ -391,9 +393,22 @@ namespace WeChat
             return member;
         }
 
-            #endregion
+        #endregion
 
             #region Member Manage
+
+        /// <summary>二次验证</summary>
+        /// <param name="userid">成员UserId</param>
+        /// <returns></returns>
+        public WXErrorMsg Authsucc(string userid)
+        {
+            // 请求地址
+            string authsucc_url = "{0}/authsucc?access_token={1}&userid={2}".StrFormat(CORP_URL_B, AccessToken.access_token, userid);
+            // 获取企业成员信息
+            WXErrorMsg errmsg = WebHttp.SendGet<WXErrorMsg>(authsucc_url);
+            Log.Info("Get Corp WeChat Member：{0} \n Response：{2}", authsucc_url, Utils.JsonSerialize(errmsg));
+            return errmsg;
+        }
 
         /// <summary>保存成员信息</summary>
         /// <param name="member">成员信息</param>
@@ -412,8 +427,8 @@ namespace WeChat
             return errmsg;
         }
 
-        /// <summary>创建成员</summary>
-        /// <param name="member">成员信息</param>
+        /// <summary>获取成员信息</summary>
+        /// <param name="userid">成员UserId</param>
         /// <returns></returns>
         public CorpMemberInfo GetMember(string userid)
         {
@@ -461,7 +476,8 @@ namespace WeChat
             else
             {
                 // 请求地址
-                string member_url = "{0}/delete?access_token={1}&userid={2}".StrFormat(CORP_URL_B, AccessToken.access_token, userids[0]);
+                string member_url = "{0}/delete?access_token={1}&userid={2}".StrFormat(CORP_URL_B, 
+                    AccessToken.access_token, userids[0]);
                 // 删除企业成员信息
                 errmsg = WebHttp.SendGet<WXErrorMsg>(member_url);
                 Log.Info("Delete Corp WeChat Member：{0} \n Response：{2}", member_url, Utils.JsonSerialize(errmsg));
@@ -469,6 +485,37 @@ namespace WeChat
             return errmsg;
         }
 
+        /// <summary>userid与openid互换</summary>
+        /// <param name="userid">企业内的成员id</param>
+        /// <param name="agentid">整型，仅用于发红包。其它场景该参数不要填，如微信支付、企业转账、电子发票；默认不填为-1</param>
+        /// <returns></returns>
+        public WXErrorMsg GetOpenId(string userid,int agentid=-1)
+        {
+            // 请求地址
+            string member_url = "{0}/convert_to_openid?access_token={1}".StrFormat(CORP_URL_B, AccessToken.access_token);
+            string param = (agentid != -1) ? Utils.JsonSerialize(new { userid = userid, agentid = agentid }) : 
+                Utils.JsonSerialize(new { userid = userid });
+            // 新增/更新企业成员信息
+            WXErrorMsg errmsg = WebHttp.SendPost<WXErrorMsg>(member_url, param);
+            Log.Info("Save Corp WeChat Member：{0} \n Params:{1} \n Response：{2}",
+                member_url, param, Utils.JsonSerialize(errmsg));
+            return errmsg;
+        }
+
+        /// <summary>openid转userid互换</summary>
+        /// <param name="openid">企业内的成员id</param>
+        /// <returns></returns>
+        public WXErrorMsg GetUserId(string openid)
+        {
+            // 请求地址
+            string member_url = "{0}/convert_to_userid?access_token={1}".StrFormat(CORP_URL_B, AccessToken.access_token);
+            string param = Utils.JsonSerialize(new { openid = openid });
+            // 新增/更新企业成员信息
+            WXErrorMsg errmsg = WebHttp.SendPost<WXErrorMsg>(member_url, param);
+            Log.Info("Save Corp WeChat Member：{0} \n Params:{1} \n Response：{2}",
+                member_url, param, Utils.JsonSerialize(errmsg));
+            return errmsg;
+        }
             #endregion
 
         #endregion  **** Corp Platform ****

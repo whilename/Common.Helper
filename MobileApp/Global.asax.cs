@@ -22,7 +22,8 @@ namespace MobileApp
         {
             Log.Register();
             //SQLiteDbConfig.Register();
-            
+            CorpCommon.Instance.StartMenu();
+
             // 移除所有视图引擎
             ViewEngines.Engines.Clear();
             // 添加Razor视图引擎
