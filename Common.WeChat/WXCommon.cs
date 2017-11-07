@@ -89,7 +89,6 @@ namespace WeChat
                             instance = new CorpCommon();
                             // 启动缓存微信鉴权信息，7000秒刷新一次
                             instance.Start();
-                            instance.StartMenu();
                         }
                     }
                 }
