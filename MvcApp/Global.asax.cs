@@ -26,8 +26,11 @@ namespace MvcApp
             // 添加Razor视图引擎
             ViewEngines.Engines.Add(new RazorViewEngine());
             AreaRegistration.RegisterAllAreas();
+            // 处理Json时间格式话
             GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.
                 Converters.Add(new IsoDateTimeConverter { DateTimeFormat = "yyyy'-'MM'-'dd' 'HH':'mm':'ss" });
+            // 处理是否序列化Xml报文表单
+            GlobalConfiguration.Configuration.Formatters.XmlFormatter.UseXmlSerializer = true;
 
             WebApiConfig.Register(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
