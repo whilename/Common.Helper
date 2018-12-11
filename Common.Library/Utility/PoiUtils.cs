@@ -71,7 +71,20 @@ namespace Common.Utility
         /// <param name="stream"></param>
         public PoiUtils(Stream stream)
         {
-            _workbook = new HSSFWorkbook(stream);
+            using (BinaryReader red = new BinaryReader(stream))
+            {
+                string st = string.Empty;
+                for (int i = 0; i < 2; i++) { st += red.ReadByte().ToString(); }
+                stream.Position = 0;
+                /* 01|accdb,mdb; 208207|doc,xls,ppt,wps; 8075|docx,pptx,xlsx,zip,mmap;
+                 * 5150,4946/104116,239187|txt,aspx,asp,sql; 8297|rar; 7790|exe,dll;
+                 * 3780|pdf; 7173|gif; 255216|jpg; 13780|png; 6677|bmp; 6063|xml;
+                 * 6033|htm,html; 4742|js; 5666|psd; 255254|rdp; 10056|bt; 64101|bat; 4059|sgf; 
+                 */
+                if (st == "208207") { _workbook = new HSSFWorkbook(stream); }
+                if (st == "8075") { _workbook = new XSSFWorkbook(stream); is_xlsx = true; }
+                stream.Close();
+            }
             _sheet = _workbook.GetSheetAt(0);
         }
 
@@ -258,6 +271,36 @@ namespace Common.Utility
             return _evaluator.Evaluate(cell).NumberValue.ToDecimal();
         }
 
+        /// <summary>获得一个Table</summary>
+        /// <param name="fistColumn">首行是否为列</param>
+        /// <returns>返回Excel的数据表格</returns>
+        public DataTable GetDataTable(bool fistColumn = true)
+        {
+            DataTable result = new DataTable();
+            int last_row = _sheet.LastRowNum + 1; // 总行数？总行数下标从0开始的哈😭
+            int last_cell = _sheet.GetRow(last_row - 1).LastCellNum; // 总列数
+            if (last_row > 0)
+            {
+                // 添加表头
+                for (int column = 1; column <= last_cell; column++)
+                {
+                    // 第一列为表头或自动生成表头
+                    result.Columns.Add(new DataColumn(fistColumn ? GetCellText(1, column) : "Column" + column));
+                }
+            }
+            // 读取数据行
+            for (int r = (fistColumn ? 2 : 1); r <= last_row; r++)
+            {
+                DataRow row = result.NewRow();// 添加一行
+                for (int c = 1; c <= last_cell; c++)
+                {
+                    row[c - 1] = GetCellText(r, c);// 获得单元格数据
+                }
+                result.Rows.Add(row);
+            }
+            return result;
+        }
+
         #endregion
 
         #region 设置单元格
@@ -433,6 +476,26 @@ namespace Common.Utility
         /// <param name="row"></param>
         /// <param name="height"></param>
         public void SetRowHeight(int row, int height) { _sheet.SetColumnWidth(row - 1, height * 256); }
+
+        /// <summary>加载数据表至Sheet表格</summary>
+        /// <param name="data"></param>
+        public void LoadDataTable(DataTable data, string sheetName = "Sheet1")
+        {
+            _sheet = _workbook.GetSheet(sheetName);
+            // 加载表头
+            for (int c = 0; c < data.Columns.Count; c++)
+            {
+                SetCellText(1, c + 1, data.Columns[c].ColumnName);
+            }
+            // 加载表数据行
+            for (int r = 0; r < data.Rows.Count; r++)
+            {
+                for (int c = 0; c < data.Columns.Count; c++)
+                {
+                    SetCellText(r + 2, c + 1, data.Rows[r][c]);
+                }
+            }
+        }
 
         #endregion
 
