@@ -324,10 +324,14 @@ namespace Common.Utility
             if (value == null) return;
             Type t = value.GetType();
             ICell cell = GetCell(row, col);
-            if (t == typeof(decimal) || t == typeof(double)
-                || t == typeof(Int32) || t == typeof(Int64))
+            if (t == typeof(Int32) || t == typeof(Int64))
             {
                 cell.SetCellValue(value.ToDouble());
+                cell.CellStyle.DataFormat = CreateDataFormat().GetFormat("#,##0");
+            }
+            if (t == typeof(decimal) || t == typeof(double))
+            {
+                cell.SetCellValue(value.ToDouble().ToString("#,##0.00"));
             }
             else if (t == typeof(DateTime))
             {
