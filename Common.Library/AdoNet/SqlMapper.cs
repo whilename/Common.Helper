@@ -107,6 +107,26 @@ namespace Common.AdoNet
             return db_helper.DBConnection.ExecuteScalar(sqlstr, param, db_helper.dbtrans, db_helper.ComTimeout, CommandType.Text);
         }
 
+        /// <summary>执行sql并返回读取数据操作对象</summary>
+        /// <param name="sqlstr">执行的SQL</param>
+        /// <param name="param">参数</param>
+        /// <returns></returns>
+        public IDataReader ExecuteReader(string sqlstr, object param = null)
+        {
+            return db_helper.DBConnection.ExecuteReader(sqlstr, param, db_helper.dbtrans, db_helper.ComTimeout, CommandType.Text);
+        }
+
+        /// <summary>执行sql并返回读取数据表</summary>
+        /// <param name="sqlstr">执行的SQL</param>
+        /// <param name="param">参数</param>
+        /// <returns></returns>
+        public DataTable QueryDataTable(string sqlstr, object param = null)
+        {
+            DataTable table = new DataTable();
+            table.Load(ExecuteReader(sqlstr, param));
+            return table;
+        }
+
         /// <summary>统计数量</summary>
         /// <param name="conditions">条件</param>
         /// <returns></returns>
