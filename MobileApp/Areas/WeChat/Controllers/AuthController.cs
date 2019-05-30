@@ -1,13 +1,13 @@
-﻿using Mobile.Bll;
-using Mobile.Models;
+﻿using MobileApp.Bll;
+using MobileApp.Models;
 using Common.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using WeChat;
-using WeChat.Models;
+using Wechat;
+using Wechat.Models;
 
 namespace MobileApp.Areas.WeChat.Controllers
 {

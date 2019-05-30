@@ -1,0 +1,209 @@
+﻿@model SmartPortal.Models.Menu
+@{
+    ViewBag.Title = "编辑菜单";
+}
+<!-- Page title -->
+@Html.Partial("Custom/PageTitle")
+<!-- End of Page title -->
+<!-- Page content -->
+<div id="page">
+    <!-- Wrapper -->
+    <div class="wrapper">
+        <!-- 左边分部小节开始 -->
+        <section class="column width6 first">
+            <h3>功能简介</h3>
+            <div class="box box-info">
+                编辑菜单信息。
+            </div>
+            <form id="from" name="from" method="post" action="@Url.Action("Edit")" accept-charset="utf-8">
+                <fieldset>
+                    <legend>菜单信息</legend>
+                    <p>
+                        <label class="required" for="MenuName">菜单名字：</label><br />
+                        <input type="text" id="MenuName" name="MenuName" class="full" value="@Model.MenuName" />
+                    </p>
+                    <p>
+                        <label class="required" for="MenuLink">链接地址：</label><br />
+                        <input type="text" id="MenuLink" name="MenuLink" class="full" value="@Model.MenuLink" />
+                    </p>
+                    <p>
+                        <label for="">显示图标：</label><br />
+                        <input type="text" id="MenuIcon" name="MenuIcon" class="full" value="@Model.MenuIcon" />
+                    </p>
+                    <p>
+                        <label for="">描述：</label><br />
+                        <textarea id="Description" name="Description" class="large full" style="height: 50px;">@Model.Description</textarea>
+                    </p>
+                    <p>
+                        <label for="">上级编号：</label><br />
+                        <input type="text" id="ParentID" name="ParentID" class="full" value="@Model.ParentID" />
+                    </p>
+                    <p>
+                        <label for="">类别：</label><br />
+                        <select id="Category" class="half" name="Category">
+                            <option value="0">后台</option>
+                            <option value="1" selected>前台</option>
+                        </select>
+                    </p>
+                    <p>
+                        <label for="">排序号：</label><br />
+                        <input type="text" id="SortNum" name="SortNum" class="full" value="@Model.SortNum" />
+                    </p>
+                    <p>
+                        @Html.CheckBox("Enabled", Model.Enabled)
+                        <label> 是否启用</label>
+                    </p>
+
+                    <p class="box">
+                        <input type="submit" class="btn btn-green big" value="保存" />
+                        或 <a href="@Url.Action("Index")" class="btn big">取消</a>
+                    </p>
+                </fieldset>
+            </form>
+        </section>
+        <!-- 左边分部小节结束 -->
+        <!-- 右边分部小节开始 -->
+        <aside class="column width2">
+            <!--快捷菜单-->
+            @Html.Partial("Custom/QuickMenu", (List<SmartPortal.Models.Custom.QuickMenu>)ViewBag.QMenu)
+            <!--实用的提示信息-->
+            @Html.Partial("Custom/Tips", (SmartPortal.Models.Custom.Tips)ViewBag.Tip)
+        </aside>
+        <!-- 右边分部小节结束 -->
+    </div>
+    <!-- End of Wrapper -->
+</div>
+<!-- End of Page content -->
+
+<script type="text/javascript">
+    $(function () {
+
+        /*文章内容编辑框*/
+        $('#Content').wysiwyg({
+            controls: {
+                strikeThrough: {
+                    visible: true
+                },
+                underline: {
+                    visible: true
+                },
+
+                justifyLeft: {
+                    visible: true
+                },
+                justifyCenter: {
+                    visible: true
+                },
+                justifyRight: {
+                    visible: true
+                },
+                justifyFull: {
+                    visible: true
+                },
+
+                indent: {
+                    visible: true
+                },
+                outdent: {
+                    visible: true
+                },
+
+                subscript: {
+                    visible: true
+                },
+                superscript: {
+                    visible: true
+                },
+
+                undo: {
+                    visible: true
+                },
+                redo: {
+                    visible: true
+                },
+
+                insertOrderedList: {
+                    visible: true
+                },
+                insertUnorderedList: {
+                    visible: true
+                },
+                insertHorizontalRule: {
+                    visible: true
+                },
+
+                h4: {
+                    visible: true,
+                    className: 'h4',
+                    command: $.browser.msie ? 'formatBlock' : 'heading',
+                    arguments: [$.browser.msie ? '<h4>' : 'h4'],
+                    tags: ['h4'],
+                    tooltip: 'Header 4'
+                },
+                h5: {
+                    visible: true,
+                    className: 'h5',
+                    command: $.browser.msie ? 'formatBlock' : 'heading',
+                    arguments: [$.browser.msie ? '<h5>' : 'h5'],
+                    tags: ['h5'],
+                    tooltip: 'Header 5'
+                },
+                h6: {
+                    visible: true,
+                    className: 'h6',
+                    command: $.browser.msie ? 'formatBlock' : 'heading',
+                    arguments: [$.browser.msie ? '<h6>' : 'h6'],
+                    tags: ['h6'],
+                    tooltip: 'Header 6'
+                },
+
+                cut: {
+                    visible: true
+                },
+                copy: {
+                    visible: true
+                },
+                paste: {
+                    visible: true
+                },
+                html: {
+                    visible: true
+                }
+            }
+        });
+
+        /*表单验证*/
+        var validator = $("#from").validate({
+            rules: {
+                MenuName: {
+                    required: true,
+                    minlength: 2,
+                    maxlength: 20
+                },
+                MenuLink: {
+                    required: true,
+                    maxlength: 255
+                }
+            },
+            messages: {
+                MenuName: {
+                    required: "输入菜单名字",
+                    minlength: jQuery.format("请输入至少 {0} 个字符")
+                },
+                MenuLink: {
+                    required: "输入菜单链接",
+                    maxlength: jQuery.format("最多输入 {0} 个字符")
+                }
+            },
+            errorPlacement: function (error, element) {
+                error.insertAfter(element.parent().find('label:first'));
+            },
+            submitHandler: function () {
+                from.submit();
+            },
+            success: function (label) {
+                label.html("&nbsp;").addClass("ok");
+            }
+        });
+    });
+</script>

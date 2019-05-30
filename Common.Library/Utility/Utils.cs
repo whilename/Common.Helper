@@ -14,6 +14,8 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Http.Controllers;
 using System.Xml.Serialization;
+using System.Data;
+using System.Collections.Concurrent;
 
 namespace Common.Utility
 {
@@ -291,6 +293,74 @@ namespace Common.Utility
                     }
                 }
             }
+        }
+
+        /// <summary>缓存对象属性名,用于where条件变量</summary>
+        private static ConcurrentDictionary<string, PropertyInfo[]> _properties = new ConcurrentDictionary<string, PropertyInfo[]>();
+
+        /// <summary></summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static PropertyInfo[] GetProperties(object obj)
+        {
+            // 获取对象的公共属性(带get/set访问器) 
+            PropertyInfo[] properties = new PropertyInfo[] { };
+            if (!_properties.TryGetValue(obj.GetType().Name, out properties))
+            {
+                _properties[obj.GetType().Name] = properties = obj.GetType().GetProperties();
+            }
+            return properties;
+        }
+
+        /// <summary></summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="row"></param>
+        /// <returns></returns>
+        public static T DataRowToObject<T>(DataRow row) where T : class
+        {
+            T obj = System.Activator.CreateInstance<T>();
+            PropertyInfo[] properties = new PropertyInfo[] { };
+            // 查找对象缓存属性
+            if (!_properties.TryGetValue(obj.GetType().Name, out properties))
+            {
+                _properties[obj.GetType().Name] = properties = obj.GetType().GetProperties();
+            }
+            foreach (PropertyInfo p in properties)
+            {
+                // 如果数据行中没有查到匹配的列名就跳过
+                if (!row.Table.Columns.Contains(p.Name)) { continue; }
+                try
+                {
+                    Object val = row[p.Name];
+                    if (val == DBNull.Value) { val = null; }
+                    if (p.PropertyType == typeof(string) && val != null)
+                    {
+                        p.GetSetMethod().Invoke(obj, new Object[] { val.ToString().Trim() });
+                    }
+                    else if (p.PropertyType == typeof(int) && val != null)
+                    {
+                        p.GetSetMethod().Invoke(obj, new object[] { Convert.ToInt32(val) });
+                    }
+                    else if (p.PropertyType == typeof(double) && val != null)
+                    {
+                        p.GetSetMethod().Invoke(obj, new object[] { Convert.ToDouble(val) });
+                    }
+                    else if (p.PropertyType == typeof(decimal) && val != null)
+                    {
+                        p.GetSetMethod().Invoke(obj, new object[] { Convert.ToDecimal(val) });
+                    }
+                    else if (p.PropertyType == typeof(DateTime) && val != null)
+                    {
+                        p.GetSetMethod().Invoke(obj, new object[] { Convert.ToDateTime(val) });
+                    }
+                    else
+                    {
+                        p.GetSetMethod().Invoke(obj, new Object[] { val });
+                    }
+                }
+                catch (Exception ex) { Log.Error(ex); }
+            }
+            return obj;
         }
 
         /// <summary>将指定对象转换成url参数字符串</summary>

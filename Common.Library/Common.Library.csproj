@@ -122,6 +122,23 @@
     <Compile Include="Utility\PoiUtils.cs" />
     <Compile Include="Utility\Utils.cs" />
     <Compile Include="Utility\WebHttp.cs" />
+    <Compile Include="Wechat\BaseWechat.cs" />
+    <Compile Include="Wechat\Models\CorpMemberInfo.cs" />
+    <Compile Include="Wechat\Models\CorpMemberTicket.cs" />
+    <Compile Include="Wechat\Models\WXAccessToken.cs" />
+    <Compile Include="Wechat\Models\WXErrorMsg.cs" />
+    <Compile Include="Wechat\Models\WXEventMsg.cs" />
+    <Compile Include="Wechat\Models\WXEventReplyMsg.cs" />
+    <Compile Include="Wechat\Models\WXJSConfig.cs" />
+    <Compile Include="Wechat\Models\WXMenus.cs" />
+    <Compile Include="Wechat\Models\WXMsgTemplate.cs" />
+    <Compile Include="Wechat\Models\WXPayBase.cs" />
+    <Compile Include="Wechat\Models\WXPayUnifiedorder.cs" />
+    <Compile Include="Wechat\Models\WXPayUnifiedorderResponse.cs" />
+    <Compile Include="Wechat\Models\WXTicket.cs" />
+    <Compile Include="Wechat\Models\WXUserInfo.cs" />
+    <Compile Include="Wechat\WXCommon.cs" />
+    <Compile Include="Wechat\WXPayment.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="log4net.config">
@@ -129,7 +146,9 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Wechat\Content\lib\wx.js" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

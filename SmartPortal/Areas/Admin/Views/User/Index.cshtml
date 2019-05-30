@@ -1,0 +1,75 @@
+﻿@model  IEnumerable<SmartPortal.Models.User>
+@{
+    ViewBag.Title = "用户列表";
+}
+<!-- Page title -->
+@Html.Partial("Custom/PageTitle")
+<!-- End of Page title -->
+<!-- Page content -->
+<div id="page">
+    <!-- Wrapper -->
+    <div class="wrapper">
+        <!-- 左边分部小节开始 -->
+        <section class="column width6 first">
+            <h3>功能简介</h3>
+            <div class="box box-info">
+                供网站用户账户信息永久存储功能。
+            </div>
+            <!--用户列表开始-->
+            <h3>用户列表</h3>
+            <table class="display stylized" id="example">
+                <thead>
+                    <tr>
+                        <th>用户账号</th>
+                        <th>用户昵称</th>
+                        <th>最后登录</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (SmartPortal.Models.User user in Model)
+                    {
+                        <tr class="gradeX">
+                            <td>@user.UserName </td>
+                            <td>@user.Nick </td>
+                            <td>@user.EndLoginDate </td>
+                            <td>
+                                <a href="@Url.Action("Edit", new { uid = user.UId })">编辑</a>|
+                                <a href="@Url.Action("Del", new { uid = user.UId })"> 删除</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>用户账号</th>
+                        <th>用户昵称</th>
+                        <th>最后登录</th>
+                        <th>操作</th>
+                    </tr>
+                </tfoot>
+            </table>
+            <div class="clear">
+                &nbsp;
+            </div>
+            <!--用户列表结束-->
+        </section>
+        <!-- 左边分部小节结束 -->
+        <!-- 右边分部小节开始 -->
+        <aside class="column width2">
+            <!--快捷菜单-->
+            @Html.Partial("Custom/QuickMenu", (List<SmartPortal.Models.Custom.QuickMenu>)ViewBag.QMenu)
+            <!--实用的提示信息-->
+            @Html.Partial("Custom/Tips", (SmartPortal.Models.Custom.Tips)ViewBag.Tip)
+        </aside>
+        <!-- 右边分部小节结束 -->
+    </div>
+    <!-- End of Wrapper -->
+</div>
+<!-- End of Page content -->
+<script type="text/javascript">
+    $(function () {
+        /* datatable */
+        $('#example').dataTable();
+    });
+</script>

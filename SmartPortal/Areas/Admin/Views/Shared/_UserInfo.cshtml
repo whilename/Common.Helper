@@ -1,0 +1,13 @@
+﻿@{
+    Layout = null;
+}
+<!-- Top navigation -->
+<div id="topnav">
+    <a href="#"><img class="avatar" src="@Url.Content("~/Content/img/user_32.png")" alt="" /></a>
+    当前已登录用户 <b>@if (Request.Cookies["username"] != null) { Html.Raw(Request.Cookies["username"].Value); }</b> <span>|</span>
+    <a href="#">用户设置</a> <span>|</span>
+    <a href="@Url.Action("LoginOut", "System", new { username = Request.Cookies["username"].Value })">退出登录</a>
+    <br />
+    <small>您有<a href="#" class="high"><b>0</b>未读消息!</a></small>
+</div>
+<!-- End of Top navigation -->

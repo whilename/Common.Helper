@@ -1,0 +1,28 @@
+﻿@{
+    Layout = null;
+    SmartPortal.Models.SmartDB smartDB = new SmartPortal.Models.SmartDB();
+    List<SmartPortal.Models.Products> items = (from m in smartDB.Products orderby m.PublishTime descending select m).Take(6).ToList();
+}
+<div id="product1">
+    <div class="tit">
+        <div class="titleft">产品展示</div>
+        <div class="titright">
+            <a href="@Url.Action("Products")"><img src="@Url.Content("~/Content/images/more.jpg")" border="0" alt="查看更多产品" /></a>
+        </div>
+    </div>
+    <ul>
+        @foreach (var p in items)
+        {
+            <li>
+                <a href="@Url.Action("ProductsDetail",new { id=p.ID })"><img src="@p.ProductsImage" alt="产品图片" border="0" /></a>
+                <a href="@Url.Action("ProductsDetail",new { id=p.ID })"><span><b>@p.ProductsName</b></span></a><br />@p.Summary
+            </li>
+        }
+        @*<li><a href="#"><img src="#" alt="产品图片" border="0" /></a> <a href="#"><span><b>产品名称</b></span></a><br />产品描述产品描述产品描述产品描述产品描述产品述</li>
+        <li><a href="#"><img src="#" alt="产品图片" border="0" /></a> <a href="#"><span><b>产品名称</b></span></a><br />产品描述产品描述产品描述产品描述产品描述产品述</li>
+        <li><a href="#"><img src="#" alt="产品图片" border="0" /></a> <a href="#"><span><b>产品名称</b></span></a><br />产品描述产品描述产品描述产品描述产品描述产品述</li>
+        <li><a href="#"><img src="#" alt="产品图片" border="0" /></a> <a href="#"><span><b>产品名称</b></span></a><br />产品描述产品描述产品描述产品描述产品描述产品述</li>
+        <li><a href="#"><img src="#" alt="产品图片" border="0" /></a> <a href="#"><span><b>产品名称</b></span></a><br />产品描述产品描述产品描述产品描述产品描述产品述</li>
+        <li><a href="#"><img src="#" alt="产品图片" border="0" /></a> <a href="#"><span><b>产品名称</b></span></a><br />产品描述产品描述产品描述产品描述产品描述产品述</li>*@
+    </ul>
+</div>

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using WeChat;
-using WeChat.Models;
+using Wechat;
+using Wechat.Models;
 
 namespace MobileApp.Controllers
 {

@@ -1,0 +1,179 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>用户登录 - 网站后台管理系统V1.0</title>
+    <meta name="description" content="网站后台管理系统登录页面" />
+    <meta name="keywords" content="网站后台" />
+    
+    <!--应用公共头文件-->
+    @Html.Partial("_ReferenceHead")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            /* setup navigation, content boxes, etc... */
+            Administry.setup();
+
+            // validate signup form on keyup and submit
+            var validator = $("#loginform").validate({
+                rules: {
+                    username: "required",
+                    password: "required",
+                    code: "required"
+                },
+                messages: {
+                    username: "请输入用户账号",
+                    password: "请输入账户密码",
+                    code: "请输入验证码"
+                },
+                // the errorPlacement has to take the layout into account
+                errorPlacement: function (error, element) {
+                    error.insertAfter(element.parent().find('label:first'));
+                },
+                // set new class to error-labels to indicate valid fields
+                success: function (label) {
+                    // set &nbsp; as text for IE
+                    label.html("&nbsp;").addClass("ok");
+                }
+            });
+
+            /*单击验证码图片自动更换*/
+            $("#VerificationCode").click(function () {
+                var url = "VerificationCode?r=" + Math.random();
+                $(this).attr("src", url);
+            });
+        });
+    </script>
+</head>
+<body>
+
+    <!-- Header -->
+    <header id="top">
+        <div class="wrapper-login">
+            <!-- Title/Logo - can use text instead of image -->
+            <div id="title">
+                <img src="@Url.Content("~/content/img/logo.png")" alt="Administry" />
+            </div>
+            <!-- Main navigation -->
+            <nav id="menu">
+                <ul class="sf-menu">
+                    <li class="current">
+                        <a href="#">登录</a>
+                    </li>
+                    <!--
+                    <li>
+                        <a href="#">注册</a>
+                    </li>-->
+                </ul>
+            </nav>
+            <!-- End of Main navigation -->
+            <!-- Aside links -->
+            <aside>
+                <b>简体中文</b><!-- &middot; <a href="#">English</a>-->
+            </aside>
+            <!-- End of Aside links -->
+        </div>
+    </header>
+    <!-- End of Header -->
+    <!-- Page title -->
+    <div id="pagetitle">
+        <div class="wrapper-login"></div>
+    </div>
+    <!-- End of Page title -->
+
+    <!-- Page content -->
+    <div id="page">
+        <!-- Wrapper -->
+        <div class="wrapper-login">
+            <!-- Login form -->
+            <section class="full">
+
+                <h3>登录</h3>
+
+                <div class="box box-info">
+                    @if (ViewBag.Message == null || ViewBag.Message == "")
+                    {
+                        <p>请输入用户名和密码登录系统。如果您是首次访问，请“<a href="@Url.Action("Install")">点此连接</a>”以进行安装。</p>
+                    }
+                    else
+                    {
+                        <p>@ViewBag.Message</p>
+                    }
+                </div>
+
+                <form id="loginform" method="post" action="@Url.Action("Login")">
+
+                    <p>
+                        <label class="required" for="username">用户名:</label>
+                        <br />
+                        <input type="text" id="username" class="full" value="" name="username" />
+                    </p>
+
+                    <p>
+                        <label class="required" for="password">密码:</label>
+                        <br />
+                        <input type="password" id="password" class="full" value="" name="password" />
+                    </p>
+
+                    <p>
+                        <label class="required" for="password">验证码:</label>
+                        <br />
+                        <div style="height: 27px; line-height: 27px; vertical-align: central;">
+                            <input type="text" id="code" name="code" class="full" value="" style="width: 100px; float: left;" maxlength="4" />
+                            <img src="@Url.Content(string.Format("~/Admin/System/VerificationCode?r={0}", new Random().Next(99999).ToString()))" 
+                            alt="点击刷新图片" style=" margin-left:8px; width:62px; height:27px; float:left; cursor:pointer;" id="VerificationCode" />
+                        </div>
+                    </p>
+
+                    <p>
+                        <input type="checkbox" id="remember" class="" value="1" name="remember" />
+                        <label class="choice" for="remember">记住我一周？</label>
+                    </p>
+
+                    <p>
+                        <input type="submit" class="btn btn-green big" value="登录" />
+                        &nbsp; <a href="#" onclick="$('#emailform').slideDown(); return false;">忘记密码?</a> 或 <a href="#">需要帮助?</a>
+                    </p>
+                    <div class="clear">
+                        &nbsp;
+                    </div>
+
+                </form>
+
+                <form id="emailform" style="display: none" method="post" action="#">
+                    <div class="box">
+                        <p id="emailinput">
+                            <label for="email">电子邮件:</label>
+                            <br />
+                            <input type="text" id="email" class="full" value="" name="email" />
+                        </p>
+                        <p>
+                            <input type="submit" class="btn" value="发送" />
+                        </p>
+                    </div>
+                </form>
+
+            </section>
+            <!-- End of login form -->
+
+        </div>
+        <!-- End of Wrapper -->
+    </div>
+    <!-- End of Page content -->
+
+    <!-- Page footer -->
+    <footer id="bottom">
+        <div class="wrapper-login">
+            <p>
+                Copyright &copy; 2012 <b><a href="#" title="">SmartAdmin</a></b>
+            </p>
+        </div>
+    </footer>
+    <!-- End of Page footer -->
+
+</body>
+</html>

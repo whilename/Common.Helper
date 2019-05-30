@@ -1,0 +1,39 @@
+﻿@{
+    Layout = null;
+    string action = ViewContext.RouteData.Values["action"].ToString();
+    SmartPortal.Models.SmartDB smartDB = new SmartPortal.Models.SmartDB();
+    List<SmartPortal.Models.Menu> menus = (from m in smartDB.Menus where m.Category == 1 && m.Enabled == true orderby m.SortNum ascending select m).ToList();
+    List<SmartPortal.Models.Menu> parents = menus.Where(m => m.ParentID == 0).OrderBy(m=>m.SortNum).ToList();
+}
+<!--nav开始-->
+<div id="nav1">
+    <div id="nav">
+        <ul class="i-menu" style="margin-bottom: 0px;">
+            @foreach (var p in parents)
+            {
+                List<SmartPortal.Models.Menu> items = menus.Where(m => m.ParentID == p.ID).OrderBy(m => m.SortNum).ToList();
+                <li class="white">
+                    <a href="@Url.Content(p.MenuLink)" @(action.Equals(p.MenuIcon, StringComparison.CurrentCultureIgnoreCase) ? "class=li1" : string.Empty)>@p.MenuName</a>
+                    @if (items.Count > 0)
+                    {
+                        <ul>
+                            @foreach (var item in items)
+                            {
+                                <li><a href="@Url.Content(item.MenuLink)">@item.MenuName</a></li>
+                            }
+                        </ul>
+                    }
+                </li>
+            }
+            @*<li class="white"><a href="@Url.Action("Index")" @(action.Equals("Index") ? "class=li1" : string.Empty)>网站首页</a></li>
+            <li class="white"><a href="@Url.Action("CompanyProfile")" @(action.Equals("CompanyProfile") ? "class=li1" : string.Empty)>公司简介</a></li>
+            <li class="white"><a href="@Url.Action("Products")" @(action.Equals("Products") ? "class=li1" : string.Empty)>产品展示</a></li>
+            <li class="white"><a href="@Url.Action("News")" @(action.Equals("News") ? "class=li1" : string.Empty)>新闻资讯</a></li>
+            <li class="white"><a href="@Url.Action("ProductsLore")" @(action.Equals("ProductsLore") ? "class=li1" : string.Empty)>产品知识</a></li>
+            <li class="white"><a href="@Url.Action("SalesNetwork")" @(action.Equals("SalesNetwork") ? "class=li1" : string.Empty)>销售网络</a></li>
+            <li class="white"><a href="@Url.Action("Service")" @(action.Equals("Service") ? "class=li1" : string.Empty)>服务宗旨</a></li>
+            <li class="white"><a href="@Url.Action("Contact")" @(action.Equals("Contact") ? "class=li1" : string.Empty)>联系我们</a></li>*@
+        </ul>
+    </div>
+</div>
+@*<div id="navdx"></div>*@

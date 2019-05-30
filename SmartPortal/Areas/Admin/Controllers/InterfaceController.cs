@@ -1,0 +1,24 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+namespace SmartPortal.Areas.Admin.Controllers
+{
+    /// <summary>
+    /// 开放接口
+    /// 提供第三方调用API接口功能，用于第三方采集器连接、自动发布等。
+    /// </summary>
+    [Filter.DefaultAuthorizationFilter]
+    [Filter.DefaultLoggerActionFilter]
+    [Filter.DefaultExceptionFilter]
+    public class InterfaceController : BaseController
+    {
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+    }
+}

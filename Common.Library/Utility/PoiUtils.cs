@@ -1,20 +1,23 @@
-﻿using NPOI.HSSF.UserModel;
+﻿using NPOI.SS.Util;
+using NPOI.XSSF.UserModel;
+using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using Common.Extension;
 using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using NPOI.SS.Util;
-using System.IO;
-using NPOI.XSSF.UserModel;
+using System.Data;
 
 namespace Common.Utility
 {
     /// <summary>NPOI Utils</summary>
     public class PoiUtils
     {
+        #region Property 
+
         private ISheet _sheet;
         /// <summary></summary>
         public ISheet WorkSheet
@@ -47,6 +50,10 @@ namespace Common.Utility
         }
         private IFormulaEvaluator _evaluator;
         private bool is_xlsx = false;
+
+        #endregion
+
+        #region Structure 
 
         /// <summary>NPOI加载Excel</summary>
         /// <param name="filepath"></param>
@@ -89,7 +96,16 @@ namespace Common.Utility
         }
 
         /// <summary>NPOI帮助类</summary>
-        public PoiUtils(IWorkbook workbook = null, ISheet sheet = null)
+        public PoiUtils(bool IsXlsx)
+        {
+            if (IsXlsx) { _workbook = new XSSFWorkbook(); }
+            else { _workbook = new HSSFWorkbook(); }
+            _sheet = _workbook.CreateSheet("Sheet1");
+            _sheet.ForceFormulaRecalculation = true;
+        }
+
+        /// <summary>NPOI帮助类</summary>
+        public PoiUtils(IWorkbook workbook = null, ISheet sheet = null, bool IsXlsx = false)
         {
             _workbook = workbook ?? new HSSFWorkbook();
             _sheet = sheet ?? _workbook.CreateSheet("Sheet1");
@@ -122,7 +138,7 @@ namespace Common.Utility
             using (MemoryStream stream = new MemoryStream())
             {
                 this._workbook.Write(stream);
-                bits = stream.GetBuffer();
+                bits = stream.ToArray();//.GetBuffer();
                 stream.Close();
             }
             return bits;
@@ -139,6 +155,8 @@ namespace Common.Utility
                 this._workbook.Write(fsWrite);
             }
         }
+
+        #endregion
 
         #region 取得单元格
 
@@ -192,7 +210,7 @@ namespace Common.Utility
         /// </remarks>
         public string GetCellText(int row, int col)
         {
-            //用不惯POI啊。GetRow会返回null
+            //GetRow会返回null
             IRow hssfrow = _sheet.GetRow(row - 1);
             if (hssfrow == null)
             {
@@ -296,6 +314,9 @@ namespace Common.Utility
                 {
                     row[c - 1] = GetCellText(r, c);// 获得单元格数据
                 }
+                string s = String.Join("", row.ItemArray.ToArray());
+                // 排除空数据行
+                if (string.IsNullOrWhiteSpace(s)) { continue; }
                 result.Rows.Add(row);
             }
             return result;
@@ -326,21 +347,25 @@ namespace Common.Utility
             ICell cell = GetCell(row, col);
             if (t == typeof(Int32) || t == typeof(Int64))
             {
-                cell.SetCellValue(value.ToDouble());
-                cell.CellStyle.DataFormat = CreateDataFormat().GetFormat("#,##0");
+                cell.SetCellValue(value.ToString().ToInt());
+                ICellStyle style = CreateCellStyle();
+                style.DataFormat = CreateDataFormat().GetFormat("#,##0");
+                cell.CellStyle = style;
             }
             if (t == typeof(decimal) || t == typeof(double))
             {
-                cell.SetCellValue(value.ToDouble().ToString("#,##0.00"));
+                cell.SetCellValue(value.ToDouble());
+                ICellStyle style = CreateCellStyle();
+                style.DataFormat = CreateDataFormat().GetFormat("#,##0.00");
+                cell.CellStyle = style;
             }
             else if (t == typeof(DateTime))
             {
-                cell.SetCellValue(Convert.ToDateTime(value));
-                cell.CellStyle.DataFormat = CreateDataFormat().GetFormat("yyyy-MM-dd HH:mm:ss");
+                cell.SetCellValue(Convert.ToDateTime(value).ToString("yyyy-MM-dd HH:mm:ss"));
             }
             else if (t == typeof(bool))
             {
-                cell.SetCellValue(Convert.ToBoolean(value) ? "是" : "否");
+                cell.SetCellValue(Convert.ToBoolean(value) ? "True" : "False");
             }
             else
             {
@@ -353,7 +378,7 @@ namespace Common.Utility
         /// <param name="col"></param>
         /// <param name="value"></param>
         /// <param name="cellStyle"></param>
-        public void SetCellTextStyle(int row, int col, object value, HSSFCellStyle cellStyle)
+        public void SetCellTextStyle(int row, int col, object value, ICellStyle cellStyle)
         {
             SetCellText(row, col, value);
             SetCellStyle(row, col, cellStyle);
@@ -380,7 +405,7 @@ namespace Common.Utility
         /// <param name="col"></param>
         /// <param name="formula"></param>
         /// <param name="cellStyle"></param>
-        public void SetCellFormulaStyle(int row, int col, string formula, HSSFCellStyle cellStyle)
+        public void SetCellFormulaStyle(int row, int col, string formula, ICellStyle cellStyle)
         {
             SetCellFormula(row, col, formula);
             SetCellStyle(row, col, cellStyle);
@@ -433,23 +458,11 @@ namespace Common.Utility
         /// <param name="toCol"></param>
         public void SetCellStyle(int fromRow, int fromCol, int toRow, int toCol) { SetCellStyle(toRow, toCol, GetCellStyle(fromRow, fromCol)); }
 
-        /// <summary></summary>
-        /// <param name="toRow"></param>
-        /// <param name="toCol"></param>
-        /// <param name="fromCellStyle"></param>
-        public void SetCellStyle(int toRow, int toCol, ICellStyle fromCellStyle) { GetCell(toRow, toCol).CellStyle = fromCellStyle; }
-
-        /// <summary></summary>
-        /// <param name="row"></param>
-        /// <param name="col"></param>
-        /// <param name="cellstyle"></param>
-        public void SetCellStyle(int row, string col, HSSFCellStyle cellstyle) { SetCellStyle(row, ToNumber(col), cellstyle); }
-
         /// <summary>设置单元格样式</summary>
         /// <param name="row"></param>
         /// <param name="col"></param>
         /// <param name="cellstyle"></param>
-        public void SetCellStyle(int row, int col, HSSFCellStyle cellstyle) { GetCell(row, col).CellStyle = cellstyle; }
+        public void SetCellStyle(int row, int col, ICellStyle cellstyle) { GetCell(row, col).CellStyle = cellstyle; }
 
         /// <summary>隐藏列</summary>
         /// <param name="col"></param>
@@ -483,6 +496,7 @@ namespace Common.Utility
 
         /// <summary>加载数据表至Sheet表格</summary>
         /// <param name="data"></param>
+        /// <param name="sheetName"></param>
         public void LoadDataTable(DataTable data, string sheetName = "Sheet1")
         {
             _sheet = _workbook.GetSheet(sheetName);
@@ -498,6 +512,11 @@ namespace Common.Utility
                 {
                     SetCellText(r + 2, c + 1, data.Rows[r][c]);
                 }
+            }
+            // 自动列宽
+            for (int c = 0; c < data.Columns.Count; c++)
+            {
+                _sheet.AutoSizeColumn(c);
             }
         }
 
@@ -647,3 +666,4 @@ namespace Common.Utility
         #endregion
     }
 }
+

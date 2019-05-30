@@ -1,0 +1,91 @@
+﻿@model IEnumerable<SmartPortal.Models.Menu>
+@{
+    ViewBag.Title = "菜单列表";
+}
+<!-- Page title -->
+@Html.Partial("Custom/PageTitle")
+<!-- End of Page title -->
+<!-- Page content -->
+<div id="page">
+    <!-- Wrapper -->
+    <div class="wrapper">
+        <!-- 左边分部小节开始 -->
+        <section class="column width6 first">
+            <h3>功能简介</h3>
+            <div class="box box-info">
+                管理网站发布的功能菜单。
+            </div>
+            <!--菜单列表开始-->
+            <h3>菜单列表</h3>
+            <table class="display stylized" id="example">
+                <thead>
+                    <tr>
+                        <th>编号</th>
+                        <th>菜单名字</th>
+                        <th>链接地址</th>
+                        <th>显示图标</th>
+                        <th>类别</th>
+                        <th>排序号</th>
+                        <th>启用</th>
+                        @*<th>删除</th>*@
+                        <th>操作LK</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (SmartPortal.Models.Menu entity in Model)
+                    {
+                        <tr>
+                            <td>@entity.ID</td>
+                            <td>@entity.MenuName</td>
+                            <td>@entity.MenuLink</td>
+                            <td>@entity.MenuIcon</td>
+                            <td>@(entity.Category == 1 ? "前台" : "后台")</td>
+                            <td>@entity.SortNum</td>
+                            <td>@Html.CheckBox("Enabled", entity.Enabled, new { disabled = "disabled" })</td>
+                            @*<td>@Html.CheckBox("Delete", entity.Deleted, new { disabled = "disabled" })</td>*@
+                            <td>
+                                <a href="@Url.Action("Copy", new { id = entity.ID })">复制</a>|
+                                <a href="@Url.Action("Edit", new { id = entity.ID })">编辑</a>|
+                                <a href="@Url.Action("Del", new { id = entity.ID })">删除</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>编号</th>
+                        <th>菜单名字</th>
+                        <th>链接地址</th>
+                        <th>显示图标</th>
+                        <th>类别</th>
+                        <th>排序号</th>
+                        <th>启用</th>
+                        @*<th>删除</th>*@
+                        <th>操作</th>
+                    </tr>
+                </tfoot>
+            </table>
+            <div class="clear">
+                &nbsp;
+            </div>
+            <!--菜单列表结束-->
+        </section>
+        <!-- 左边分部小节结束 -->
+        <!-- 右边分部小节开始 -->
+        <aside class="column width2">
+            <!--快捷菜单-->
+            @Html.Partial("Custom/QuickMenu", (List<SmartPortal.Models.Custom.QuickMenu>)ViewBag.QMenu)
+            <!--实用的提示信息-->
+            @Html.Partial("Custom/Tips", (SmartPortal.Models.Custom.Tips)ViewBag.Tip)
+        </aside>
+        <!-- 右边分部小节结束 -->
+    </div>
+    <!-- End of Wrapper -->
+</div>
+<!-- End of Page content -->
+<script type="text/javascript">
+    $(function () {
+        /* datatable */
+        $('#example').dataTable();
+    });
+</script>

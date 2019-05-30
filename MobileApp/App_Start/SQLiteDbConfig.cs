@@ -1,6 +1,6 @@
 ﻿using Common.AdoNet;
 using Common.Utility;
-using Mobile.Models;
+using MobileApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,0 +1,56 @@
+﻿@{
+    Layout = null;
+
+    string ctl = ViewContext.RouteData.Values["controller"].ToString();
+    SmartPortal.Models.SmartDB smartDB = new SmartPortal.Models.SmartDB();
+    List<SmartPortal.Models.Menu> menus = (from m in smartDB.Menus where m.Category == 0 && m.Enabled == true orderby m.SortNum ascending select m).ToList();
+    List<SmartPortal.Models.Menu> parents = menus.Where(m => m.ParentID == 0).OrderBy(m=>m.SortNum).ToList();
+}
+<!-- 主菜单导航 -->
+<nav id="menu">
+    <ul class="sf-menu">
+        @foreach (var p in parents)
+        {
+            List<SmartPortal.Models.Menu> items = menus.Where(m => m.ParentID == p.ID).OrderBy(m=>m.SortNum).ToList();
+            <li @(ctl.Equals(p.MenuIcon, StringComparison.CurrentCultureIgnoreCase) ? "class=current" : string.Empty)>
+                <a href="@Url.Content(p.MenuLink)">@p.MenuName</a>
+                @if (items.Count > 0)
+                {
+                <ul>
+                    @foreach (var item in items)
+                    {
+                        <li><a href="@Url.Content(item.MenuLink)">@item.MenuName</a></li>
+                    }
+                </ul>
+                }
+            </li>
+        }
+        @*<!--门户网站后台基础应用模块-->
+            <li @(url.Contains("Article") ? className : string.Empty)><a href="@Url.Action("Index","Article")">文章管理</a></li>
+            <li @(url.Contains("Product") ? className : string.Empty)><a href="@Url.Action("Index","Product")">产品管理</a></li>
+            <li @(url.Contains("Picture") ? className : string.Empty)><a href="@Url.Action("Index","Picture")">图片管理</a></li>
+            <li @(url.Contains("Attachment") ? className : string.Empty)><a href="@Url.Action("Index","Attachment")">附件管理</a></li>
+            <li @(url.Contains("LeaveMessage") ? className : string.Empty)><a href="@Url.Action("Index","LeaveMessage")">留言管理</a></li>
+            <li @(url.Contains("Contact") ? className : string.Empty)><a href="@Url.Action("Index","Contact")">联系方式</a></li>
+            <li @(url.Contains("Link") ? className : string.Empty)><a href="@Url.Action("Index","Link")">友情链接</a></li>
+            <!--门户网站后台基础应用模块结束-->
+            <!--门户网站后台基础管理模块-->
+            <li @(url.Contains("System") ? className : string.Empty)>
+                <a href="@Url.Action("Index","System")">系统管理</a>
+                <ul>
+                    <li><a href="@Url.Action("Index","Configuration")">网站设置</a></li>
+                    <li><a href="@Url.Action("Index","Menu")">菜单管理</a></li>
+                    <li><a href="@Url.Action("Index","Backup")">备份恢复</a></li>
+                    <li><a href="@Url.Action("Index","User")">用户管理</a></li>
+                    <li><a href="@Url.Action("Index","Logger")">日志管理</a></li>
+                    <li><a href="@Url.Action("Index","Analysis")">访客分析</a></li>
+                    <li><a href="@Url.Action("Index","Security")">安全设置</a></li>
+                    <li><a href="@Url.Action("Index","Update")">更新维护</a></li>
+                    <li><a href="@Url.Action("Index","Interface")">开放平台</a></li>
+                    <li><a href="@Url.Action("Index","System")">系统设置</a></li>
+                </ul>
+            </li>*@
+        <!--门户网站后台基础管理模块结束-->
+    </ul>
+</nav>
+<!-- 主菜单导航结束 -->

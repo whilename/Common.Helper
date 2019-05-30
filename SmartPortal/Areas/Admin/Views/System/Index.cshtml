@@ -1,0 +1,38 @@
+﻿@{
+    ViewBag.Title = "管理主页";
+}
+<!-- Page title -->
+@Html.Partial("Custom/PageTitle")
+<!-- End of Page title -->
+<!-- Page content -->
+<div id="page">
+    <!-- Wrapper -->
+    <div class="wrapper">
+        <!-- 左边分部小节开始 -->
+        <section class="column width6 first">
+            <h3>功能简介</h3>
+            <div class="box box-info">
+                提供查看网站整体运行情况信息功能。
+            </div>
+            <form id="sampleform" method="post" action="#">
+                @*
+                    @foreach (var m in ViewBag.Data)
+                    {
+                        <p>@m.UserName,@m.Nick,@m.UserRole,@m.CurrentIPAddress,@m.MutileOnLine,@m.RegisterDate</p>
+                    }
+                *@
+            </form>
+        </section>
+        <!-- 左边分部小节结束 -->
+        <!-- 右边分部小节开始 -->
+        <aside class="column width2">
+            <!--快捷菜单-->
+            @Html.Partial("Custom/QuickMenu", (List<SmartPortal.Models.Custom.QuickMenu>)ViewBag.QMenu)
+            <!--实用的提示信息-->
+            @Html.Partial("Custom/Tips", (SmartPortal.Models.Custom.Tips)ViewBag.Tip)
+        </aside>
+        <!-- 右边分部小节结束 -->
+    </div>
+    <!-- End of Wrapper -->
+</div>
+<!-- End of Page content -->

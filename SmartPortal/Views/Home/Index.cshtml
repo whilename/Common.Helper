@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.Title = "网站首页";
+}
+<audio id="musicfx" controls="controls" loop="loop" autoplay="autoplay" style="display:none;">
+    <source src="~/Content/%e6%9d%8e%e9%9b%a8%e5%84%bf-%e4%b9%9d%e5%b6%b7%e7%a5%9e%e9%9f%b5.mp3" type="audio/mpeg" />
+</audio>
+<!--left开始-->
+<div id="left">
+    @Html.Partial("Custom/ProductItem")
+    @Html.Partial("Custom/ArticleItem")
+    <div class="productlist" style="margin-top: 8px;">
+        <img src="@Url.Content("../content/images/lxwm.jpg")" width="251" alt="" />
+    </div>
+</div>
+<!--left结束-->
+<!--right开始-->
+<div id="right">
+    <div id="company">
+        <!--tit开始-->
+        <div class="tit">
+            <div class="titleft">公司介绍</div>
+            <div class="titright" style="margin-top: -7px;">
+                <img src="@Url.Content("~/Content/images/more.jpg")" border="0" />
+            </div>
+        </div>
+        @Html.Partial("Custom/ArticleDetail")
+        <!--tit结束-->
+
+        @Html.Partial("Custom/ArticleView")
+        @Html.Partial("Custom/ProductView")
+    </div>
+</div>
+<!--right结束-->

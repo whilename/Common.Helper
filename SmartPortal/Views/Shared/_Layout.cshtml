@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>@ViewBag.Title - 宁远烟草党建</title>
+    <meta name="keywords" content="@ViewBag.Keywords" />
+    <meta name="description" content="@ViewBag.Description" />
+    <meta name="about" content="@ViewBag.About" />
+    <meta name="date" content="@ViewBag.Date" />
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/css/main.css")" />
+    <link rel="icon" type="image/png" href="@Url.Content("~/Content/icon/favicon.ico")" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/css/bootstrap-3.3.7.min.css")" />
+    <script src="@Url.Content("~/Content/js/jquery-2.1.1.min.js")"></script>
+    <script src="@Url.Content("~/Content/js/bootstrap-3.3.7.min.js")"></script>
+</head>
+<body>
+    @Html.Partial("_Hander")
+    @Html.Partial("_Menu")
+    <div id="wrap">
+        <!--banner开始-->
+        @Html.Partial("Custom/Banner")
+        <!--banner结束-->
+        <!--contact开始-->
+        <div id="content">
+            @RenderBody()
+        </div>
+        <!--contact结束-->
+        @Html.Partial("_CopyRight")
+    </div>
+</body>
+</html>
