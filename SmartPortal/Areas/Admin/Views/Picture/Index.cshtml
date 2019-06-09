@@ -33,7 +33,7 @@
                     <tr class="gradeX">
                         <td>@pic.SortNum </td>
                         <td>@pic.PictureSrc </td>
-                        <td>@pic.Category </td>
+                        <td>@(pic.Category == 1 ? "首页banner" : "站内资源" ) </td>
                         <td>@Html.CheckBox("Enabled", pic.Enabled, new { disabled = "disabled" })</td>
                         <td>
                             <a href="@Url.Action("Edit", new { id = pic.Id })">编辑</a>|

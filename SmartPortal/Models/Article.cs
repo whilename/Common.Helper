@@ -65,7 +65,7 @@ namespace SmartPortal.Models
         /// <summary>
         /// 正文内容
         /// </summary>
-        [StringLength(8000)]
+        //[StringLength(int.MaxValue)]
         public string Content { get; set; }
 
         /// <summary>

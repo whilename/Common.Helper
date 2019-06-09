@@ -33,7 +33,7 @@ a:active { text-decoration: none; color: #4B4B4B; }
 
 #ajbg { /*width: 570px;*/ height: 60px; float: right; text-align: left; margin-top: 10px; padding-top: 28px; margin-right: 15px; padding-left: 80px; background: url(tel.gif) no-repeat right 5px; }
 
-#nav1 { margin: 0 auto; width: auto; height: 33px; background-image: url(../images/nav-bg.jpg); background-repeat: repeat-x; border: #0763B6 1px solid; }
+#nav1 { margin: 0 auto; width: auto; height: 33px; background-image: url(../images/nav-bg.jpg); background-repeat: repeat-x; border: /*#0763B6*/#EE3134 1px solid; }
 
 #nav { margin: 0px auto; width: 1000px; height: 33px; line-height: 33px; font-size: 14px; text-align: center; font-weight: bold; }
 
