@@ -1,10 +1,16 @@
 ﻿@{
     Layout = null;
+    SmartPortal.Models.SmartDB smartDB = new SmartPortal.Models.SmartDB();
+    List<SmartPortal.Models.Article> items = (from m in smartDB.Articles where m.ArticleCat == 2 orderby m.PublishTime descending select m).Take(10).ToList();
 }
 <div class="productlist" style="margin-top: 10px; height: 340px;">
-    <div class="newtit"> 知识</div>
+    <div class="newtit"> 公司新闻</div>
     <div class="bk_con">
         <ul>
+            @foreach (var n in items)
+            {
+                <li><a href="@Url.Action("NewsDetail", new { id = n.ID })">@n.ArticleTitle</a></li>
+            }
             @*<li><a href="#">球磨机常见焊接工艺和方法以及各堆焊</a></li>
             <li><a href="#">红星人讲述球磨机齿轮零部件加工工艺</a></li>
             <li><a href="#">红星机器阐述我国近半个世纪以来球磨</a></li>*@
