@@ -1,9 +1,14 @@
-*.cs linguist-language=C#
+* text=auto
 
-*.js linguist-language=C#
+*.cs -text diff=csharp
+*.cshtml -text
 
-*.css linguist-language=C#
+*.js -text
+*.css -text
+*.html -text
 
-*.html linguist-language=C#
-
-*.cshtml linguist-language=C#
+*.csproj -text merge=union 
+*.vbproj -text merge=union 
+*.fsproj -text merge=union 
+*.dbproj -text merge=union 
+*.sln -text merge=union 
