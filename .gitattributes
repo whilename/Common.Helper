@@ -1,14 +1,14 @@
 * text=auto
 
-*.cs -text diff=csharp
-*.cshtml -text diff=csharp
+*.cs linguist-language=csharp
+*.cshtml linguist-language=csharp
 
-*.js -text diff=csharp
-*.css -text diff=csharp
-*.html -text diff=csharp
+*.js linguist-language=csharp
+*.css linguist-language=csharp
+*.html linguist-language=csharp
 
-*.csproj -text merge=union 
-*.vbproj -text merge=union 
-*.fsproj -text merge=union 
-*.dbproj -text merge=union 
-*.sln -text merge=union 
+*.csproj linguist-language=csharp
+*.vbproj linguist-language=csharp
+*.fsproj linguist-language=csharp 
+*.dbproj linguist-language=csharp
+*.sln linguist-language=csharp
