@@ -1,11 +1,11 @@
 * text=auto
 
 *.cs -text diff=csharp
-*.cshtml -text
+*.cshtml -text diff=csharp
 
-*.js -text
-*.css -text
-*.html -text
+*.js -text diff=csharp
+*.css -text diff=csharp
+*.html -text diff=csharp
 
 *.csproj -text merge=union 
 *.vbproj -text merge=union 
