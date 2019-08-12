@@ -97,6 +97,10 @@
       <Project>{15c4790d-4939-4c8f-8050-eab573c4b0b1}</Project>
       <Name>Common.Library</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ThoughtWorks.QRCode\ThoughtWorks.QRCode.csproj">
+      <Project>{797d3ed0-bf5d-45e4-8648-5ec489e205ee}</Project>
+      <Name>ThoughtWorks.QRCode</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\ハルヒ.png" />
