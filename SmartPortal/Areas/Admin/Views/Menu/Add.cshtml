@@ -1,6 +1,11 @@
 ﻿@model SmartPortal.Models.Menu
 @{
     ViewBag.Title = "添加菜单";
+    SmartPortal.Models.SmartDB smartDB = new SmartPortal.Models.SmartDB();
+    List<SelectListItem> menus = (from m in smartDB.Menus where m.ParentID == 0 && m.Enabled == true orderby m.SortNum ascending select m)
+        .Select(m=>new SelectListItem { Value=m.ID.ToString(), Text=m.MenuName }).ToList();
+    menus.Insert(0, new SelectListItem { Value = "0", Text = "一级菜单" });
+
 }
 <!-- Page title -->
 @Html.Partial("Custom/PageTitle")
@@ -36,7 +41,8 @@
                     </p>
                     <p>
                         <label for="">上级编号：</label><br />
-                        <input type="text" id="ParentID" name="ParentID" class="full" value="@Model.ParentID" />
+                        @*<input type="text" id="ParentID" name="ParentID" class="full" value="@Model.ParentID" />*@
+                        @Html.DropDownList("ParentID", menus, new { Class = "full" })
                     </p>
                     <p>
                         <label for="">类别：</label><br />
@@ -47,7 +53,7 @@
                     </p>
                     <p>
                         <label for="">排序号：</label><br />
-                        <input type="text" id="SortNum" name="SortNum" class="full" value="@Model.SortNum" />
+                        <input type="number" id="SortNum" name="SortNum" class="full" value="@Model.SortNum" />
                     </p>
                     <p>
                         @Html.CheckBox("Enabled", Model.Enabled)

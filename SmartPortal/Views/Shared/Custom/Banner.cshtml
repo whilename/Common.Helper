@@ -1,7 +1,7 @@
 ﻿@{
     Layout = null;
     SmartPortal.Models.SmartDB smartDB = new SmartPortal.Models.SmartDB();
-    List<SmartPortal.Models.Picture> items = (from m in smartDB.Pictures where m.Enabled == true orderby m.SortNum ascending select m).Take(18).ToList();
+    List<SmartPortal.Models.Picture> items = (from m in smartDB.Pictures where m.Category==1 && m.Enabled == true orderby m.SortNum ascending select m).Take(18).ToList();
     bool active = true;
 }
 @*<div id="banner">

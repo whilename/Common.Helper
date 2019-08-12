@@ -15,7 +15,7 @@ namespace SmartPortal.Areas.Admin.Controllers
         [Filter.DefaultAuthorizationFilter]
         public ActionResult Index()
         {
-            var data = from m in smartDB.Menus orderby m.ID ascending select m;
+            var data = from m in smartDB.Menus where m.Category == 1 orderby m.ID ascending select m;
 
             ViewBag.QMenu = GetQuickMenu();
             return View(data);

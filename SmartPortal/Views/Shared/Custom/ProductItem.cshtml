@@ -1,10 +1,16 @@
 ﻿@{
     Layout = null;
+    SmartPortal.Models.SmartDB smartDB = new SmartPortal.Models.SmartDB();
+    List<SmartPortal.Models.Article> items = (from m in smartDB.Articles where m.ArticleCat == 1 orderby m.PublishTime descending select m).Take(10).ToList();
 }
 <div class="productlist" style="height: 276px;">
-    <div class="producttit">列表</div>
+    <div class="producttit"> 行业新闻</div>
     <div class="list_con">
         <ul>
+            @foreach (var n in items)
+            {
+                <li><a href="@Url.Action("NewsDetail", new { id = n.ID })">@n.ArticleTitle</a></li>
+            }
             @*<li><a href="#">圆锥球磨机</a></li>
             <li><a href="#">陶瓷球磨机</a></li>
             <li><a href="#">棒磨机</a></li>

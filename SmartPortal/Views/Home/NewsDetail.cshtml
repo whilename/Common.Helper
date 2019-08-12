@@ -11,7 +11,7 @@
     @Html.Partial("Custom/ProductItem")
     @Html.Partial("Custom/ArticleItem")
     <div class="productlist" style="margin-top: 8px;">
-        <img src="@Url.Content("../content/images/lxwm.jpg")" width="251" alt="查看更多" />
+        <img src="@Url.Content("~/content/images/lxwm.jpg")" width="251" alt="查看更多" />
     </div>
 </div>
 <!--left结束-->
@@ -20,7 +20,7 @@
     <div id="company">
         <!--tit开始-->
         <div class="tit">
-            <div class="titleft"> 文章内容 </div>
+            <div class="titleft"> @(Model.ArticleCat == 3 ? Model.ArticleTitle : "文章内容") </div>
             <div class="titright" style="margin-top: -7px;">
                 <img src="@Url.Content("~/Content/images/more.jpg")" border="0" alt="查看更多" />
             </div>
@@ -29,19 +29,22 @@
         <!--示例内容-->
         <div class="bj">
             <h2 style="text-align:center;color:black;">@Model.ArticleTitle</h2>
-            <span>
-                <b>编辑作者：</b>@Model.About
-                <b>文章来源：</b><a href="@Model.SourceLink" target="_blank">@Model.SourceName</a>
-                <b>发布时间：</b>@Model.PublishTime
-            </span>
-            <p>
-                <b>摘要：</b>@Model.Summary
-            </p>
-            <h2>@Model.Keywords</h2>
-            <p>
-                @Html.Raw(Model.Content)
-            </p>
-        </div>
+            @if (Model.ArticleCat != 3)
+            {
+                <span>
+                    <b>编辑作者：</b>@Model.About
+                    <b>文章来源：</b><a href="@Model.SourceLink" target="_blank">@Model.SourceName</a>
+                    <b>发布时间：</b>@Model.PublishTime
+                </span>
+                <p>
+                    <b>摘要：</b>@Model.Summary 
+                </p>
+            }
+                <h2>@Model.Keywords</h2>
+                <p>
+                    @Html.Raw(Model.Content)
+                </p>
+            </div>
         <!--示例内容结束-->
     </div>
 </div>
