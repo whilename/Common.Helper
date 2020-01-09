@@ -44,7 +44,7 @@ namespace MvcApp
                         + filterContext.Exception.InnerException.InnerException.StackTrace);
                 }
             }
-            LogHelper.WriteErrorLog(message.ToString());
+            Log.WriteErrorLog(message.ToString());
         }
     }
 }
