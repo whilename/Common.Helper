@@ -34,6 +34,7 @@ namespace MvcApp
 
             WebApiConfig.Register(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+            GlobalConfiguration.Configuration.Filters.Add(new ApiHandleErrorAttribute());
             RouteConfig.RegisterRoutes(RouteTable.Routes);
         }
     }
