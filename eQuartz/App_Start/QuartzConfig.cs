@@ -65,5 +65,74 @@ namespace eQuartz
         }
 
     }
-    
+    /*
+    public class QuartzConfig
+    {
+        private static IScheduler _scheduler = StdSchedulerFactory.GetDefaultScheduler();
+        /// <summary></summary>
+        public static IScheduler Scheduler { get { return _scheduler; } }
+
+        /// <summary>Register jobs and trigger</summary>
+        public static void RegisterJobTrigger()
+        {
+            try
+            {
+                LogHelper.WriteInfoLog("------------------ Quartz Scheduler Start ------------------", "Quartz");
+                Scheduler.Start();
+                JobScheduleManager manager = new JobScheduleManager();
+                // Get all enabled jobs
+                List<JobScheduleEntity> items = manager.FindByEnabled();
+                //List<JobScheduleEntity> items = manager.FindByKeyWord("KTC"); //ktc email
+                LogHelper.WriteInfoLog("Register jobs " + items.Count(), "Quartz");
+                for (int i = 0; i < items.Count; i++)
+                {
+                    RegisterJobTrigger(items[i]);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Error(ex, "Quartz");
+            }
+        }
+
+
+        /// <summary>Register jobs and trigger</summary>
+        /// <param name="entity">job schedule info</param>
+        public static void RegisterJobTrigger(JobScheduleEntity entity)
+        {
+            try
+            {
+                // check exists job name, if true delete job
+                if (Scheduler.CheckExists(new JobKey(entity.JobName, entity.JobGroup)))
+                    Scheduler.DeleteJob(new JobKey(entity.JobName));
+                // JobDataMap map = new JobDataMap();
+                // map.Put(Key, Object);
+                // define the job and tie it to our MyJob class
+                IJobDetail job = JobBuilder.Create(Type.GetType(entity.JobType))//.UsingJobData(map)
+                    .WithIdentity(entity.JobName, entity.JobGroup).Build();
+
+                TriggerKey trigger = new TriggerKey(entity.JobName + "Trigger", entity.JobName + "TriggerGroup");
+                // Trigger the job to run now
+                ITrigger JobTrigger = TriggerBuilder.Create().WithIdentity(trigger)
+                    //.WithCronSchedule("30 * * * * ?").Build();
+                    .WithCronSchedule(entity.CronExpression).Build();
+                if (Scheduler.GetTrigger(trigger) != null)
+                {
+                    // Tell quartz to schedule the job using our new trigger
+                    Scheduler.RescheduleJob(trigger, JobTrigger);
+                }
+                else
+                {
+                    // Tell quartz to schedule the job using our trigger
+                    Scheduler.ScheduleJob(job, JobTrigger);
+                }
+                LogHelper.WriteInfoLog("Register job " + entity.JobName, "Quartz");
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Error(ex, "Quartz");
+            }
+
+        }
+    }*/
 }
