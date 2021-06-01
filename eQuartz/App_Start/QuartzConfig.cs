@@ -134,5 +134,30 @@ namespace eQuartz
             }
 
         }
-    }*/
+    }
+    public class JobScheduleEntity
+    {
+        public JobScheduleEntity()
+        {
+            Created = Updated = DateTime.Now;
+            Enabled = true;
+        }
+
+        [Key]
+        public int ID { get; set; }
+        public string JobName { get; set; }
+        public string JobGroup { get; set; }
+        public string Description { get; set; }
+        public string JobType { get; set; }
+        public string CronExpression { get; set; }
+        public int Classify { get; set; }
+        public string Tag { get; set; }
+        public string CreateBy { get; set; }
+        public DateTime Created { get; set; }
+        public string UpdateBy { get; set; }
+        public DateTime Updated { get; set; }
+        public bool Enabled { get; set; }
+
+    }
+    */
 }
