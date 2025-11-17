@@ -6,9 +6,13 @@ using System.Text;
 
 namespace Common.Utility
 {
-    public abstract class JsonElement
+    /// <summary>Enumeration of Json element types.</summary>
+    internal enum JsonElementType { Null, String, Number, Boolean, Object, Array }
+    internal abstract class JsonElement
     {
         protected object Value { get; set; }
+        /// <summary>Json element types.</summary>
+        public JsonElementType JEleType { get; set; } = JsonElementType.Null;
 
         public T ToObject<T>() => (T)Convert.ChangeType(Value, typeof(T));
 
@@ -23,7 +27,7 @@ namespace Common.Utility
         {
             string text = jsonStr.Trim();
             if ((!text.StartsWith("{") || !text.EndsWith("}")) && (!text.StartsWith("[") || !text.EndsWith("]")))
-                throw new JsonParseException("Parsing error! The provided string does not conform to the json content specification.");
+                throw new JsonParseException("The provided JSON string is invalid. The starting position of the JSON string does not contain the \"{\" or \"[\" symbol or the ending position does not contain the \"}\" or \"]\" symbol.");
             var index = 0;
             // Parse json array
             if (text.StartsWith("["))
@@ -35,7 +39,14 @@ namespace Common.Utility
         /// <summary>Parse and convert a string to the Json object element type.</summary>
         /// <param name="jsonStr">The json string that needs to be parsed and converted.</param>
         /// <returns>Return the json object element that has been successfully parsed and converted.</returns>
-        public static JsonObject ParseJsonObject(string jsonStr) { var index = 0; return ReadJsonObject(jsonStr, ref index); }
+        public static JsonObject ParseJsonObject(string jsonStr)
+        {
+            string text = jsonStr.Trim();
+            if (!text.StartsWith("{") || !text.EndsWith("}"))
+                throw new JsonParseException("The provided JSON string is invalid. The starting position of the JSON object string does not contain the \"{\" symbol or the ending position does not contain the \"}\" symbol.");
+            var index = 0;
+            return ReadJsonObject(jsonStr, ref index);
+        }
         private static JsonObject ReadJsonObject(string jsonStr, ref int index)
         {
             JsonObject jsonObj = new JsonObject();
@@ -52,7 +63,7 @@ namespace Common.Utility
                 // Read the next character to determine whether to read the next key value or end
                 var c = jsonStr[index++];
                 if (c == ',') continue;
-                if (c == '}') break;
+                if (c == '}') break; // Match the end identifier
 
             } while (true);
             return jsonObj;
@@ -61,10 +72,20 @@ namespace Common.Utility
         /// <summary>Parse and convert a string to the Json array type.</summary>
         /// <param name="jsonStr">The json string that needs to be parsed and converted.</param>
         /// <returns>Return the json array that has been successfully parsed and converted.</returns>
-        public static JsonArray ParseJsonArray(string jsonStr) { var index = 0; return ReadJsonArray(jsonStr, ref index); }
+        public static JsonArray ParseJsonArray(string jsonStr)
+        {
+            string text = jsonStr.Trim();
+            if (!text.StartsWith("[") || !text.EndsWith("]"))
+                throw new JsonParseException("The provided JSON string is invalid. The starting position of the JSON Array string does not contain the \"[\" symbol or the ending position does not contain the \"]\" symbol.");
+            var index = 0;
+            return ReadJsonArray(text, ref index);
+        }
         private static JsonArray ReadJsonArray(string jsonStr, ref int index)
         {
             JsonArray jsonArr = new JsonArray();
+            ReadToNonBlankIndex(jsonStr, ref index);
+            var c = jsonStr[index];
+            if (c == '[') index++; // Skip the leading identifier
             do
             {
                 ReadToNonBlankIndex(jsonStr, ref index);
@@ -72,9 +93,9 @@ namespace Common.Utility
                 jsonArr.Add(ReadJsonElement(jsonStr, ref index));
                 ReadToNonBlankIndex(jsonStr, ref index);
                 // Read the next character to determine whether to read the next element or end
-                var c = jsonStr[index++];
+                c = jsonStr[index++];
                 if (c == ',') continue;
-                if (c == ']') break;
+                if (c == ']') break; // Match the end identifier
 
             } while (true);
             return jsonArr;
@@ -181,7 +202,7 @@ namespace Common.Utility
             index--;
             string value = text.Substring(index, 4);
             if (value != "null")
-                throw new JsonParseException("");
+                throw new JsonParseException($"Unidentifiable null type: {value} , Index position {index}.");
             index = index + value.Length;
             return new JsonNull();
         }
@@ -204,15 +225,15 @@ namespace Common.Utility
 
     }
 
-    public class JsonString : JsonElement
+    internal class JsonString : JsonElement
     {
-        public JsonString(string value) { Value = value; }
+        public JsonString(string value) { Value = value; JEleType = JsonElementType.String; }
         public override string ToString() => $"\"{Value}\"";
     }
 
-    public class JsonNumber : JsonElement, IEquatable<JsonNumber>
+    internal class JsonNumber : JsonElement, IEquatable<JsonNumber>
     {
-        public JsonNumber(double value) { Value = value; }
+        public JsonNumber(double value) { Value = value; JEleType = JsonElementType.Number; }
 
         public bool Equals(JsonNumber other)
         {
@@ -223,15 +244,16 @@ namespace Common.Utility
         public override bool Equals(object obj) => (obj.GetType() != this.GetType()) ? false : Equals((JsonNumber)obj);
     }
 
-    public class JsonBoolean : JsonElement, IEquatable<JsonBoolean>
+    internal class JsonBoolean : JsonElement, IEquatable<JsonBoolean>
     {
-        public JsonBoolean(bool value) { Value = value; }
+        public JsonBoolean(bool value) { Value = value; JEleType = JsonElementType.Boolean; }
         public JsonBoolean(string value)
         {
             string v = value.ToLower();
             if (v != "true" && v != "false")
                 throw new JsonParseException($"{value} cannot be converted to a valid Boolean type.");
             Value = bool.Parse(value);
+            JEleType = JsonElementType.Boolean;
         }
 
         public bool Equals(JsonBoolean other)
@@ -244,7 +266,7 @@ namespace Common.Utility
 
     }
 
-    public class JsonNull : JsonElement, IEquatable<JsonNull>
+    internal class JsonNull : JsonElement, IEquatable<JsonNull>
     {
         public override string ToString() { return "null"; }
 
@@ -259,10 +281,10 @@ namespace Common.Utility
         public override int GetHashCode() => "null".GetHashCode();
     }
 
-    public class JsonObject : JsonElement, IDictionary<string, JsonElement>, IEquatable<JsonObject>
+    internal class JsonObject : JsonElement, IDictionary<string, JsonElement>, IEquatable<JsonObject>
     {
         private IDictionary<string, JsonElement> _propertyMap;
-        public JsonObject() { Value = _propertyMap = new Dictionary<string, JsonElement>(); }
+        public JsonObject() { Value = _propertyMap = new Dictionary<string, JsonElement>(); JEleType = JsonElementType.Object; }
 
         public bool ContainsKey(string key) => _propertyMap.ContainsKey(key);
 
@@ -317,10 +339,10 @@ namespace Common.Utility
         public override string ToString() => $"{{{string.Join(",", _propertyMap.Select(x => $"\"{x.Key}\":{x.Value}"))}}}";
     }
 
-    public class JsonArray : JsonElement, IList<JsonElement>, IEquatable<JsonArray>
+    internal class JsonArray : JsonElement, IList<JsonElement>, IEquatable<JsonArray>
     {
         private List<JsonElement> _Elements;
-        public JsonArray() { Value = _Elements = new List<JsonElement>(); }
+        public JsonArray() { Value = _Elements = new List<JsonElement>(); JEleType = JsonElementType.Array; }
 
         public IEnumerator<JsonElement> GetEnumerator() => _Elements.GetEnumerator();
 
@@ -360,7 +382,7 @@ namespace Common.Utility
         public override int GetHashCode() => _Elements.Aggregate(0, (current, jsonElement) => current ^ jsonElement.GetHashCode());
     }
 
-    public class JsonParseException : Exception
+    internal class JsonParseException : Exception
     {
         public JsonParseException() { }
         public JsonParseException(string message) : base(message) { }
